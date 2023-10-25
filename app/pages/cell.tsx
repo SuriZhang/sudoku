@@ -123,9 +123,10 @@ function Cell({
         <input
           className={`bg-grey-100 flex h-full w-full justify-center text-center 
             font-bold hover:bg-gray-200
-                ${(xPos + 1) % 3 === 0 && "border-b-5 border-red"}
-                ${(yPos + 1) % 3 === 0 && "border-l-5 border-red"}
-                ${isHighlighted && "bg-blue-200"}
+                ${(xPos + 1) % 3 === 0 && xPos !== 8 && "border-b-4 border-red-400"}
+                ${(yPos + 1) % 3 === 0 && yPos !== 8 && "border-r-4 border-red-400"}
+                ${isHighlighted && "bg-yellow-200"}
+                ${cellConflicted && "text-red-500"}
             `}
           value={cellValue === 0 ? "" : cellValue}
           onChange={handleValueChange}
@@ -140,22 +141,8 @@ function Cell({
   }
 
   return (
-    <div className="w-1/9 aspect-square border border-1 border-black p-0 text-2xl text-center">
-      <input
-          className={`bg-grey-100 flex h-full w-full justify-center text-center 
-            font-bold hover:bg-gray-200
-                ${(xPos + 1) % 3 === 0 && "border-b-5 border-red"}
-                ${(yPos + 1) % 3 === 0 && "border-l-5 border-red"}
-                ${isHighlighted && "bg-yellow-200"}
-            `}
-          value={cellValue === 0 ? "" : cellValue}
-          onChange={handleValueChange}
-          onBlur={handleCellBlur}
-          readOnly={!isEditable}
-          onClick={handleCellClick}
-        />
-
-        {renderMarks()}
+    <div className="w-1/9 aspect-square border boarder-1 border-black p-0 text-2xl text-center">
+      {renderCell()}
     </div>
   );
 }
