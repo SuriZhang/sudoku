@@ -51,6 +51,7 @@ export interface CellProps {
     isConflicted?: boolean;
     isHighlighted?:boolean
     boardSize: number;
+    currentMode: string;
     onCellValueChange: (x: number, y: number, newValue: number) => boolean;
     onCellClick: (x: number, y: number) => void;
 }
@@ -63,6 +64,7 @@ function Cell({
     isConflicted = false,
     isHighlighted = false,
     boardSize,
+    currentMode,
     onCellValueChange,
     onCellClick,
 }: CellProps) {
@@ -101,6 +103,7 @@ function Cell({
             console.log(`inputValue = ${inputValue}, cellValueAfter = ${cellValue}`)
         }
     };
+
     // set the mark of the cell
     function addMark(newMark: number): void {
         if (!isEditable) return;
@@ -130,7 +133,7 @@ function Cell({
                     ${isConflicted ? "text-red-500" : "text-black"} 
                     ${(xPos + 1) % 3 === 0 && xPos !== 8 && "border-b-2 border-black"}
                     ${(yPos + 1) % 3 === 0 && yPos !== 8 && "border-r-2 border-black"}
-                    ${isHighlighted && "bg-yellow-200"}
+                    ${isHighlighted && "bg-yellow-200 border-2 border-yellow-500"}
                 `}
                     value={cellValue === 0 ? "" : cellValue}
                     onChange={handleValueChange}

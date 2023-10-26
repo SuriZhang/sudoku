@@ -4,68 +4,70 @@ import React, { useState } from "react";
 import Cell from "./cell";
 import { getRandomNumber } from "../utils/random";
 
-function SudokuGrid({ boardSize = 9 }) {
+function SudokuGrid({ boardSize = 9, currentMode = "INSERT"}) {
     const grid: JSX.Element[][] = [];
     const [selectedCells, setSelectedCells] = useState<number[]>([]);
     const [canSelect, setCanSelect] = useState<boolean>(false);
     // Track the highlighted cell
     const [highlightedCell, setHighlightedCell] = useState<string | null>(null); 
 
-    // callback function to handle cell value change
-    const handleCellValueChange = (
-        x: number,
-        y: number,
-        newValue: number
-    ): boolean => {
-        if (Number.isNaN(newValue)) {
-            grid[x][y] = (
-                <Cell
-                    key={`${x}*${boardSize}+${y}`}
-                    value={0}
-                    xPos={x}
-                    yPos={y}
-                    isEditable={true}
-                    boardSize={boardSize}
-                    onCellValueChange={handleCellValueChange}
-                    onCellClick={handleCellClick}
-                />
-            );
-            return true;
-        }
-
-        if (!validateRow(x, y, newValue)) {
-            return false;
-        } else if (!validateColumn(x, y, newValue)) {
-            return false;
-        } else if (!validateSubgrid(x, y, newValue)) {
-            return false;
-        } else {
-            // if the new value is valid, update the value of the cell
-            grid[x][y] = (
-                <Cell
-                    key={`${x}*${boardSize}+${y}`}
-                    value={newValue}
-                    xPos={x}
-                    yPos={y}
-                    isEditable={true}
-                    boardSize={boardSize}
-                    onCellValueChange={handleCellValueChange}
-                    onCellClick={handleCellClick}
-                />
-            );
-            return true;
-        }
-    };
-
     const handleCellClick = (x: number, y: number) => {
-        if (highlightedCell === `${x}*${boardSize}+${y}`) {
-        // Un-highlight the cell if it's already highlighted
-        setHighlightedCell(null);
-        } else {
-        // Highlight the clicked cell
-        setHighlightedCell(`${x}*${boardSize}+${y}`);
-        }
-  };
+		if (highlightedCell === `${x}*${boardSize}+${y}`) {
+			// Un-highlight the cell if it's already-- highlighted
+			setHighlightedCell(null);
+		} else {
+			// Highlight the clicked cell
+			setHighlightedCell(`${x}*${boardSize}+${y}`);
+		}
+	};
+
+	// callback function to handle cell value change
+	const handleCellValueChange = (
+		x: number,
+		y: number,
+		newValue: number
+	): boolean => {
+		if (Number.isNaN(newValue)) {
+			grid[x][y] = (
+				<Cell
+					key={`${x}*${boardSize}+${y}`}
+					value={0}
+					xPos={x}
+					yPos={y}
+					isEditable={true}
+                    boardSize={boardSize}
+                    currentMode={currentMode}
+					onCellValueChange={handleCellValueChange}
+					onCellClick={handleCellClick}
+				/>
+			);
+			return true;
+		}
+
+		if (!validateRow(x, y, newValue)) {
+			return false;
+		} else if (!validateColumn(x, y, newValue)) {
+			return false;
+		} else if (!validateSubgrid(x, y, newValue)) {
+			return false;
+		} else {
+			// if the new value is valid, update the value of the cell
+			grid[x][y] = (
+				<Cell
+					key={`${x}*${boardSize}+${y}`}
+					value={newValue}
+					xPos={x}
+					yPos={y}
+					isEditable={true}
+                    boardSize={boardSize}
+                    currentMode={currentMode}
+					onCellValueChange={handleCellValueChange}
+					onCellClick={handleCellClick}
+				/>
+			);
+			return true;
+		}
+	};    
 
     for (let x = 0; x < boardSize; x++) {
         const row = [];
@@ -82,6 +84,7 @@ function SudokuGrid({ boardSize = 9 }) {
                     isEditable={initValue === 0}
                     isHighlighted={key === highlightedCell}
                     boardSize={boardSize}
+                    currentMode={currentMode}
                     onCellValueChange={handleCellValueChange}
                     onCellClick={handleCellClick}
                 />
@@ -100,13 +103,12 @@ function SudokuGrid({ boardSize = 9 }) {
 
     function renderGridRows() {
         return grid.map((row, index) => (
-            <div
-                key={index}
-                className="grid bg-gray-100 grid grid-rows-9 grid-cols-9 gap-2w hover:grid-rows-9"
-            >
-                {row}
-            </div>
-        ));
+			<div
+				key={index}
+				className="grid bg-gray-100 grid grid-rows-9 grid-cols-9 gap-2w">
+				{row}
+			</div>
+		));
     }
 
     function getCellValue(x: number, y: number): number {
@@ -140,6 +142,7 @@ function SudokuGrid({ boardSize = 9 }) {
                         isEditable={true}
                         isConflicted={true}
                         boardSize={boardSize}
+                        currentMode={currentMode}
                         onCellValueChange={handleCellValueChange}
                         onCellClick={handleCellClick}
                     />
@@ -168,6 +171,7 @@ function SudokuGrid({ boardSize = 9 }) {
                         isEditable={true}
                         isConflicted={true}
                         boardSize={boardSize}
+                        currentMode={currentMode}
                         onCellValueChange={handleCellValueChange}
                         onCellClick={handleCellClick}
                     />
@@ -208,6 +212,7 @@ function SudokuGrid({ boardSize = 9 }) {
                             isEditable={true}
                             isConflicted={true}
                             boardSize={boardSize}
+                            currentMode={currentMode}
                             onCellValueChange={handleCellValueChange}
                             onCellClick={handleCellClick}
                         />
