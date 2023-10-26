@@ -77,32 +77,69 @@ function Cell({
 
     // set the value of the cell
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isEditable) {
-            let inputValue: string | number = e.target.value;
-            // validate input is a number
-            if (/^\d*$/.test(inputValue)) {
-                inputValue = parseInt(inputValue.slice(0, 1));
-                console.log(`inputValue = ${inputValue}, cellValue = ${cellValue}`)
-                // notify SudokuGrid of the change
-                if (
-                    inputValue === cellValue || Number.isNaN(inputValue) ||
-                    (e.nativeEvent as InputEvent).inputType === "deleteContentBackward"
-                ) {
-                    // re-enter the same value is equal to delete the value
-                    inputValue = Number.NaN;
-                }
+		if (!isEditable) {
+			return;
+		}
+		let inputValue: string | number = e.target.value;
+		// validate input is a number
+		if (!/^\d*$/.test(inputValue)) {
+			return;
+		} else {
+			inputValue = parseInt(inputValue.slice(0, 1));
 
-                let valid: boolean = onCellValueChange(xPos, yPos, inputValue);
-                if (valid) {
-                    console.log(`isvalid = ${valid}`)
-                    setCellValue(Number.isNaN(inputValue) ? 0 : inputValue);
-                } else {
-                    console.log(`Invalid input value ${inputValue}`);
-                }
+			console.log(`inputValue = ${inputValue}, cellValue = ${cellValue}`);
+
+            switch (currentMode) {
+                case "SELECT":
+                    handleSelectModeValueChange(e, inputValue);
+                    break;
+                case "MARK":
+                    handleMarkModeValueChange(e, inputValue);
+                    break;
+                default:
+                case "INSERT":
+                    handleInsertModeValueChange(e, inputValue);
+                    break;
             }
-            console.log(`inputValue = ${inputValue}, cellValueAfter = ${cellValue}`)
-        }
+
+			
+		}
     };
+
+    function handleSelectModeValueChange(e: React.ChangeEvent<HTMLInputElement>, inputValue: number): void {
+        // todo: fill all selected cells with the input value
+    }
+    
+    function handleMarkModeValueChange(e: React.ChangeEvent<HTMLInputElement>, inputValue: number): void {
+        // todo: add mark to the cell, if the mark already exists, remove it
+    }
+
+	function handleInsertModeValueChange(
+		e: React.ChangeEvent<HTMLInputElement>,
+		inputValue: number
+	): void {
+		// notify SudokuGrid of the change
+		if (
+			inputValue === cellValue ||
+			Number.isNaN(inputValue) ||
+			(e.nativeEvent as InputEvent).inputType === "deleteContentBackward"
+		) {
+			// re-enter the same value is equal to delete the value
+			inputValue = Number.NaN;
+		}
+
+		let valid: boolean = onCellValueChange(xPos, yPos, inputValue);
+		if (valid) {
+			console.log(`isvalid = ${valid}`);
+			setCellValue(Number.isNaN(inputValue) ? 0 : inputValue);
+		} else {
+			console.log(`Invalid input value ${inputValue}`);
+		}
+
+		console.log(
+			`inputValue = ${inputValue}, cellValueAfter = ${cellValue}`
+		);
+	}
 
     // set the mark of the cell
     function addMark(newMark: number): void {
