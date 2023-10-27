@@ -1,17 +1,11 @@
 "use client";
 
-import React, {
-	KeyboardEventHandler,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
+import React, { useContext, useState } from "react";
 import { Mark } from "./mark";
 import { GridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "./modeContext";
 
 interface CellProps extends GridInfo {
-	// currentMode: string;
 	onClick: (x: number, y: number) => void;
 	onValueChange: (x: number, y: number, value: number) => void;
 }
@@ -25,15 +19,23 @@ export const Cell = (props: CellProps) => {
 
 	const handleOnMarkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		console.log(`e.key = ${e.key}`);
-		if (e.key.match(/[1-9]/)) {
+
+		if (e.key === "Backspace") {
+			// remove last mark
+			setMarkValues(markValues.slice(0, markValues.length - 1));
+		} else if (e.key.match(/[1-9]/)) {
 			let inputValue: number = parseInt(e.key.slice(0, 1));
+
+			// if in INSERT MODE, treat as fill cell value, hide marks
+			if (currentMode === "INSERT") {
+				props.onValueChange(props.x, props.y, inputValue);
+				return;
+			}
 			if (markValues.includes(inputValue)) {
-				console.log(`xxx, value = ${inputValue}`);
 				setMarkValues(
 					markValues.filter((mark: number) => mark !== inputValue)
 				);
 			} else {
-				console.log(`yyy, value = ${inputValue}`);
 				// add mark to the cell
 				setMarkValues([...markValues, inputValue]);
 			}
@@ -58,13 +60,11 @@ export const Cell = (props: CellProps) => {
 		props.onClick(props.x, props.y);
 	};
 
-	// rendering cell
-	if (currentMode === "MARK" && props.value === 0) {
+	const renderMarks = (allowEdit: boolean) => {
 		return (
-			<>
-				<div
-					tabIndex={0}
-					className={`flex h-full w-full justify-center aspect-square 
+			<div
+				tabIndex={allowEdit ? 0 : -1}
+				className={`flex h-full w-full justify-center aspect-square 
                     border boarder-1 border-black p-0 text-sm text-center grid grid-cols-3 grid-rows-3 gap-0
                     row-start-${props.x + 1} col-start-${props.y + 1}
                     ${
@@ -80,23 +80,23 @@ export const Cell = (props: CellProps) => {
                     ${props.isConflict ? "text-red-500" : "text-black"}
                     ${props.isSelected && "bg-yellow-200"}
                     `}
-					onKeyDown={handleOnMarkKeyDown}
-					onClick={handleOnClick}>
-					{...markValues.map((markValue: number) => (
-						<Mark
-							key={`${props.x}*9+${props.y}+${markValue}}`}
-							{...props}
-							markValue={markValue}
-						/>
-					))}
-				</div>
-			</>
+				onKeyDown={handleOnMarkKeyDown}
+				onClick={handleOnClick}>
+				{...markValues.map((markValue: number) => (
+					<Mark
+						key={`${props.x}*9+${props.y}+${markValue}}`}
+						{...props}
+						markValue={markValue}
+					/>
+				))}
+			</div>
 		);
-	} else {
+	};
+
+	const renderRegularCell = () => {
 		return (
-			<>
-				<input
-					className={`flex h-full w-full justify-center font-bold aspect-square 
+			<input
+				className={`flex h-full w-full justify-center font-bold aspect-square 
                         border boarder-1 border-black p-0 text-2xl text-center
                         row-start-${props.x + 1} col-start-${props.y + 1}
                         ${
@@ -112,12 +112,32 @@ export const Cell = (props: CellProps) => {
                         ${props.isConflict ? "text-red-500" : "text-black"}
                         ${props.isSelected && "bg-yellow-200"}
                     `}
-					value={props.value === 0 ? "" : props.value}
-					onChange={handleOnValueChange}
-					readOnly={!props.isEditable}
-					onClick={handleOnClick}
-				/>
-			</>
+				value={props.value === 0 ? "" : props.value}
+				onChange={handleOnValueChange}
+				readOnly={!props.isEditable}
+				onClick={handleOnClick}
+			/>
 		);
+	};
+
+	// rendering cell
+	if (
+		props.value !== 0 ||
+		(currentMode === "INSERT" &&
+			props.value === 0 &&
+			markValues.length === 0)
+	) {
+		return <>{renderRegularCell()}</>;
+	} else if (
+		currentMode === "INSERT" &&
+		props.value === 0 &&
+		markValues.length > 0
+	) {
+		// display regular cell
+		return <>{renderMarks(false)}</>;
+	}
+	// if (currentMode === "MARK" && props.value === 0)
+	else {
+		return <>{renderMarks(true)}</>;
 	}
 };
