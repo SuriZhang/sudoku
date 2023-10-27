@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Mark } from "./mark";
 import { GridInfo } from "./useCalculateGridInfo";
+import { ModeContext } from "./modeContext";
 
 interface CellProps extends GridInfo {
-	currentMode: string;
+	// currentMode: string;
 	onClick: (x: number, y: number) => void;
 	onValueChange: (x: number, y: number, value: number) => void;
 }
@@ -13,7 +14,9 @@ interface CellProps extends GridInfo {
 // information that is exclusive to current cell
 export const Cell = (props: CellProps) => {
 	// marks for cell
-	const [markValues, setMarkValues] = useState<number[]>([]);
+    const [markValues, setMarkValues] = useState<number[]>([]);
+    
+    const currentMode = useContext(ModeContext)
 
 	const onMarkValueEnter = (value: number) => {
 		// if the mark already exists, remove it
@@ -36,7 +39,7 @@ export const Cell = (props: CellProps) => {
 				`inputValue = ${inputValue}, cellValue = ${props.value}`
 			);
 
-			switch (props.currentMode) {
+			switch (currentMode) {
 				case "INSERT":
 					props.onValueChange(props.x, props.y, inputValue);
 					break;
@@ -66,9 +69,9 @@ export const Cell = (props: CellProps) => {
 	// rendering cell
 	useEffect(() => initMarkValues(), []);
 
-	if (props.currentMode === "MARK" && props.value === 0) {
+	if (currentMode === "MARK" && props.value === 0) {
 		return (
-			<div>
+			<>
 				<div
 					className={`flex h-full w-full justify-center aspect-square 
                 border boarder-1 border-black p-0 text-sm text-center grid grid-cols-3 grid-rows-3 gap-0
@@ -96,11 +99,11 @@ export const Cell = (props: CellProps) => {
 						/>
 					))}
 				</div>
-			</div>
+			</>
 		);
 	} else {
 		return (
-			<div>
+			<>
 				<input
 					className={`flex h-full w-full justify-center font-bold aspect-square 
                 border boarder-1 border-black p-0 text-2xl text-center
@@ -123,7 +126,7 @@ export const Cell = (props: CellProps) => {
 					readOnly={!props.isEditable}
 					onClick={handleOnClick}
 				/>
-			</div>
+			</>
 		);
 	}
 };

@@ -14,7 +14,7 @@ export default function Game() {
 	};
 
 	return (
-		<div>
+		<>
 			<div className="flex justify-center items-center">
 				<SudokuGrid currentMode={currentMode} />
 			</div>
@@ -41,7 +41,7 @@ export default function Game() {
 					Select Mode (s)
 				</button>
 			</div>
-		</div>
+		</>
 	);
 }
 
