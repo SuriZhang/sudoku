@@ -38,7 +38,7 @@ export const Cell = (props: CellProps) => {
 			console.log(
 				`inputValue = ${inputValue}, cellValue = ${props.value}`
 			);
-
+            console.log(`currentMode = ${currentMode}`)
 			switch (currentMode) {
 				case "INSERT":
 					props.onValueChange(props.x, props.y, inputValue);
