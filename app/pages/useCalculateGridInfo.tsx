@@ -10,6 +10,7 @@ export interface GridInfo {
 	value: number;
 	isConflict: boolean;
 	isSelected: boolean;
+	isEditable?: boolean;
 }
 
 export const useCalculateGridInfo = () => {
@@ -118,9 +119,9 @@ export const useCalculateGridInfo = () => {
 					}
 					return cell;
 				});
-			}
+            }
 			return row;
-		});
+        });
 		setPuzzleGrid(updatedGrid);
 	};
 
@@ -132,7 +133,8 @@ export const useCalculateGridInfo = () => {
 				let initValue: number = getRandomNumber();
 				gridInfo[r][c] = {
 					x: r,
-					y: c,
+                    y: c,
+                    isEditable: initValue === 0,
 					value: initValue,
 					isConflict: false,
 					isSelected: false,
@@ -145,7 +147,7 @@ export const useCalculateGridInfo = () => {
 	return {
 		onValueChange: onCellValueChange,
 		onCellClick,
-		gridInfo: puzzleGrid,
+		puzzleGrid,
 		init,
 	};
 };
