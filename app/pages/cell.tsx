@@ -1,194 +1,86 @@
 "use client";
 
 import React, { useState } from "react";
+import { Mark } from "./mark";
+import { GridInfo } from "./useCalculateGridInfo";
 
-function Marks(length: number) {
-    const [mark, setMark] = useState<boolean[]>(new Array(length).fill(false));
-
-    const getMark = (index: number) => {
-        if (isValidMark(index)) {
-            return mark[index];
-        } else {
-            throw new Error("Invalid mark");
-        }
-    };
-
-    const updateMark = (index: number) => {
-        if (isValidMark(index)) {
-            // flip the value of the mark
-            // e.g. if this cell is marked 1, update it again means remove this mark
-            const value = !mark[index];
-            const newMark = [...mark];
-            newMark[index] = value;
-            setMark(newMark);
-        } else {
-            throw new Error("Invalid mark");
-        }
-    };
-
-    const isValidMark = (index: number) => {
-        return index >= 0 && index < mark.length;
-    };
-
-    function renderMarks() {
-        return mark.map((value, index) => {
-            if (value) {
-                return <span key={index}>{index + 1}</span>;
-            } else {
-                return null;
-            }
-        });
-    }
-
-    return { mark, getMark, updateMark, isValidMark, renderMarks };
-}
-
-export interface CellProps {
-    value: number;
-    xPos: number;
-    yPos: number;
-    isEditable?: boolean;
-    isConflicted?: boolean;
-    isHighlighted?:boolean
-    boardSize: number;
+interface CellProps extends GridInfo {
     currentMode: string;
-    onCellValueChange: (x: number, y: number, newValue: number) => boolean;
-    onCellClick: (x: number, y: number) => void;
+	onClick: (x: number, y: number) => void;
+	onValueChange: (x: number, y: number, value: number) => void;
 }
 
-function Cell({
-    value,
-    xPos,
-    yPos,
-    isEditable,
-    isConflicted = false,
-    isHighlighted = false,
-    boardSize,
-    currentMode,
-    onCellValueChange,
-    onCellClick,
-}: CellProps) {
-    const [cellValue, setCellValue] = useState<number>(value);
-    // const [cellConflicted, setCellConflicted] = useState<boolean>(isConflicted);
-    // marks are the possible values for the cell
-    const { mark, getMark, updateMark, isValidMark, renderMarks } = Marks(
-        (length = boardSize),
-    );
+// information that is exclusive to current cell
+export const Cell = (props: CellProps) => {
+	// marks for cell
+	const [markValues, setMarkValues] = useState<number[]>([]);
 
-    // set the value of the cell
-    const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (!isEditable) {
-			return;
-		}
-		let inputValue: string | number = e.target.value;
-		// validate input is a number
-		if (!/^\d*$/.test(inputValue)) {
+	const onMarkValueEnter = (value: number) => {
+		// if the mark already exists, remove it
+		if (markValues.includes(value)) {
+			setMarkValues(markValues.filter((mark: number) => mark !== value));
 			return;
 		} else {
+			// add mark to the cell
+			setMarkValues([...markValues, value]);
+		}
+	};
+
+	const handleOnValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		let inputValue: string | number = e.target.value;
+        // validate if input is a number
+		if (/^\d*$/.test(inputValue)) {
 			inputValue = parseInt(inputValue.slice(0, 1));
+			console.log(
+				`inputValue = ${inputValue}, cellValue = ${props.value}`
+            );
 
-			console.log(`inputValue = ${inputValue}, cellValue = ${cellValue}`);
-
-            switch (currentMode) {
-                case "SELECT":
-                    handleSelectModeValueChange(e, inputValue);
+            switch (props.currentMode) {
+                case "INSERT":
+                    props.onValueChange(props.x, props.y, inputValue);
                     break;
                 case "MARK":
-                    handleMarkModeValueChange(e, inputValue);
+                    break;
+                case "SELECT":
                     break;
                 default:
-                case "INSERT":
-                    handleInsertModeValueChange(e, inputValue);
                     break;
             }
-
-			
 		}
-    };
+	};
 
-    function handleSelectModeValueChange(e: React.ChangeEvent<HTMLInputElement>, inputValue: number): void {
-        // todo: fill all selected cells with the input value
-    }
-    
-    function handleMarkModeValueChange(e: React.ChangeEvent<HTMLInputElement>, inputValue: number): void {
-        // todo: add mark to the cell, if the mark already exists, remove it
-    }
+	const handleOnClick = () => {
+		props.onClick(props.x, props.y);
+	};
 
-	function handleInsertModeValueChange(
-		e: React.ChangeEvent<HTMLInputElement>,
-		inputValue: number
-	): void {
-		// notify SudokuGrid of the change
-		if (
-			inputValue === cellValue ||
-			Number.isNaN(inputValue) ||
-			(e.nativeEvent as InputEvent).inputType === "deleteContentBackward"
-		) {
-			// re-enter the same value is equal to delete the value
-			inputValue = Number.NaN;
-		}
 
-		let valid: boolean = onCellValueChange(xPos, yPos, inputValue);
-		if (valid) {
-			console.log(`isvalid = ${valid}`);
-			setCellValue(Number.isNaN(inputValue) ? 0 : inputValue);
-		} else {
-			console.log(`Invalid input value ${inputValue}`);
-		}
-
-		console.log(
-			`inputValue = ${inputValue}, cellValueAfter = ${cellValue}`
-		);
-	}
-
-    // set the mark of the cell
-    function addMark(newMark: number): void {
-        if (!isEditable) return;
-        if (isValidMark(newMark)) {
-            updateMark(newMark);
-        }
-    }
-
-    const onCellBlur = () => {
-        // Save the input value when the input field loses focus
-        if (isEditable) {
-            setCellValue(cellValue);
-        }
-    };
-
-    // select the cell
-    const handleCellClick = () => {
-        onCellClick(xPos, yPos)
-        console.log(`selected cell value = ${cellValue}`)
-        console.log(`selected cell xPos = ${xPos + 1}, yPos = ${yPos + 1}`)
-    };
-
-    function renderCell() {
+    // rendering cell
+    if (markValues.length > 0) {
         return (
-            <div className="flex h-full w-full flex-col items-center justify-center">
-                <input className={`bg-grey-100 flex h-full w-full justify-center text-center font-bold 
-                    ${isConflicted ? "text-red-500" : "text-black"} 
-                    ${(xPos + 1) % 3 === 0 && xPos !== 8 && "border-b-2 border-black"}
-                    ${(yPos + 1) % 3 === 0 && yPos !== 8 && "border-r-2 border-black"}
-                    ${isHighlighted && "bg-yellow-200 border-2 border-yellow-500"}
-                `}
-                    value={cellValue === 0 ? "" : cellValue}
-                    onChange={handleValueChange}
-                    onBlur={onCellBlur}
-                    readOnly={!isEditable}
-                    onClick={handleCellClick}
-                />
-
-                {renderMarks()}
-            </div>
+            <Mark markValues={markValues} onMarkValueEnter={onMarkValueEnter} />
+        );
+    } else {
+        return (
+            <input
+                className={`flex h-full w-full justify-center font-bold aspect-square 
+                border boarder-1 border-black p-0 text-2xl text-center
+                row-start-${props.x + 1} col-start-${props.y + 1}
+                ${(props.x + 1) % 3 === 0 &&
+                    props.x !== 8 &&
+                    "border-b-2 border-black"
+                    }
+                ${(props.y + 1) % 3 === 0 &&
+                    props.y !== 8 &&
+                    "border-r-2 border-black"
+                    }
+                ${props.isConflict ? "text-red-500" : "text-black"}
+                ${props.isSelected && "bg-yellow-200"}
+            `}
+                value={props.value === 0 ? "" : props.value}
+                onChange={handleOnValueChange}
+                readOnly={false}
+                onClick={handleOnClick}
+            />
         );
     }
-
-    return (
-        <div className="w-1/9 aspect-square border boarder-1 border-black p-0 text-2xl text-center">
-            {renderCell()}
-        </div>
-    );
-}
-
-export default Cell;
+};

@@ -1,8 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
-import SudokuGrid from "./sudokuGrid";
+import { SudokuGrid } from "./sudokuGrid";
 
 export default function Game() {
-	const [currentMode, setCurrentMode] = useState("INSERT");
+	const [currentMode, setCurrentMode] = useState<string>("INSERT");
 
 	const handleModeChange = (mode: string) => {
 		if (mode === "INSERT" || mode === "MARK" || mode === "SELECT") {
