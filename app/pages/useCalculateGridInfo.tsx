@@ -53,32 +53,40 @@ export const useCalculateGridInfo = () => {
 		x: number,
 		y: number,
 		newValue: number
-	): GridInfo[][] => {
-		const updatedGrid = fillCellValue(x, y, newValue);
-
+    ): GridInfo[][] => {
+        const updatedGrid = fillCellValue(x, y, newValue);
+    
+        let hasConflict: boolean = false;
 		// Check for conflicts in row
 		const row: GridInfo[] = updatedGrid[x];
 		row.map((cell) => {
-			if (cell.value === newValue) {
-				updatedGrid[cell.x][cell.y].isConflict = true;
+			if (cell.value === newValue && cell.y !== y) {
+                updatedGrid[cell.x][cell.y].isConflict = true;
+                hasConflict = true;
 			}
 		});
 
 		// Check for conflicts in column
 		const col: GridInfo[] = updatedGrid.map((row) => row[y]);
 		col.map((cell) => {
-			if (cell.value === newValue) {
-				updatedGrid[cell.x][cell.y].isConflict = true;
+			if (cell.value === newValue && cell.x !== x) {
+                updatedGrid[cell.x][cell.y].isConflict = true;
+                hasConflict = true;
 			}
 		});
 
 		// Check for conflicts in box
 		const boxValues: GridInfo[] = getBoxValues(updatedGrid, x, y);
 		boxValues.map((cell) => {
-			if (cell.value === newValue) {
+			if (cell.value === newValue && (cell.x !== x || cell.y !== y)) {
 				updatedGrid[cell.x][cell.y].isConflict = true;
+				hasConflict = true;
 			}
 		});
+
+        if (hasConflict) {
+			updatedGrid[x][y].isConflict = true;
+		}
 
 		return updatedGrid;
 	};
@@ -102,7 +110,7 @@ export const useCalculateGridInfo = () => {
             // if user enters backspace or the same value again, remove the cell value
             // and clear all conflicts
             updatedGrid = clearConflicts(fillCellValue(x, y, 0));
-		} else {
+        } else {
 			updatedGrid = validateAndUpdateCell(x, y, newValue);
 		}
 
