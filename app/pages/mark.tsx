@@ -8,18 +8,13 @@ interface MarkProps extends GridInfo {
 }
 
 export const Mark = (props: MarkProps) => {
-	const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-		// Check if the key pressed is a number
-		if (event.key.match(/[1-9]/)) {
-			// Convert the key to a number
-			const value = parseInt(event.key);
-			// props.onMarkValueEnter(value);
-		}
-	};
-
 	return (
-		<div className={`row-start-${Math.floor((props.markValue - 1) / 3)+1} col-start-${(props.markValue - 1) % 3+1}`}>
-			{props.markValue === 0? "": props.markValue} 
+		<div
+			className={`row-start-${
+				Math.floor((props.markValue - 1) / 3) + 1
+			} col-start-${((props.markValue - 1) % 3) + 1}
+		row-span-1 col-span-1`}>
+			{props.markValue === 0 ? "" : props.markValue}
 		</div>
 	);
 };

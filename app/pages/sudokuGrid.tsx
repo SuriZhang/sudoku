@@ -11,9 +11,11 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		useCalculateGridInfo();
 
 	const [puzzles, setPuzzles] = useState<string[]>([]);
-    const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
-    const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
-    
+	const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
+	const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
+
+	// ensure that the puzzles are fetched before initializing the grid
+	// only run once
 	useEffect(() => {
 		const fetchPuzzles = async () => {
 			try {
@@ -21,28 +23,26 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 				setPuzzles(fetchedPuzzles);
 			} catch (error) {
 				console.error("Error fetching puzzles:", error);
-            }
+			}
 		};
-        fetchPuzzles();
-        console.log(`puzzles = ${puzzles}`);
-    }, []);
-    
-    useEffect(() => {
-        setCurrentPuzzle(puzzles[puzzleIndex]);
-        init(currentPuzzle);
-    }, [currentPuzzle, puzzleIndex]);
+		fetchPuzzles();
+		console.log(`puzzles = ${puzzles}`);
+	}, []);
 
-    console.log(`sudokuGrid1.puzzles = ${puzzles}`);
-    console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`)
+	useEffect(() => {
+		setCurrentPuzzle(puzzles[puzzleIndex]);
+		init(puzzles[puzzleIndex]);
+		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
+	}, [currentPuzzle, puzzleIndex]);
 
-    const handlePuzzleChange = () => {
-        if (puzzleIndex < puzzles.length - 1) {
-            setPuzzleIndex(puzzleIndex + 1);
-        } else {
-            setPuzzleIndex(0);
-        }
-        setCurrentPuzzle(puzzles[puzzleIndex]);
-    };
+	const handlePuzzleChange = () => {
+		if (puzzleIndex < puzzles.length - 1) {
+			setPuzzleIndex(puzzleIndex + 1);
+		} else {
+			setPuzzleIndex(0);
+		}
+		setCurrentPuzzle(puzzles[puzzleIndex]);
+	};
 
 	return (
 		<>
@@ -61,12 +61,13 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 						})
 					)}
 				</ModeContext.Provider>
-            </div>
-            <button className={`mr-2 bg-blue-500
+			</div>
+			<button
+				className={`mr-2 bg-blue-500
 					hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
-					onClick={() => handlePuzzleChange()}>
-					next puzzle
-				</button>
+				onClick={() => handlePuzzleChange()}>
+				next puzzle
+			</button>
 		</>
 	);
 };
