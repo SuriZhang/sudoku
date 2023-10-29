@@ -142,7 +142,7 @@ export const useCalculateGridInfo = () => {
 				let initValue: string | number =
 					puzzle !== undefined
 						? puzzle.charAt(r * 9 + c)
-						: getRandomNumber();
+						: 0;
 				if (initValue === ".") {
 					initValue = 0;
 				}

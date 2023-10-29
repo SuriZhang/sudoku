@@ -12,7 +12,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 
 	const [puzzles, setPuzzles] = useState<string[]>([]);
     const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
-    const [currentPuzzle, setCurrentPuzzle] = useState<string>(puzzles[puzzleIndex]);
+    const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
     
 	useEffect(() => {
 		const fetchPuzzles = async () => {
@@ -21,22 +21,22 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 				setPuzzles(fetchedPuzzles);
 			} catch (error) {
 				console.error("Error fetching puzzles:", error);
-			}
+            }
 		};
-		fetchPuzzles();
-		setCurrentPuzzle(puzzles[0]);
-	}, []);
+        fetchPuzzles();
+        console.log(`puzzles = ${puzzles}`);
+    }, []);
+    
+    useEffect(() => {
+        setCurrentPuzzle(puzzles[puzzleIndex]);
+        init(currentPuzzle);
+    }, [currentPuzzle, puzzleIndex]);
 
     console.log(`sudokuGrid1.puzzles = ${puzzles}`);
-    console.log(`sudokuGrid.currentPuzzle = ${currentPuzzle}`)
+    console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`)
 
-	useEffect(() => {
-		init(currentPuzzle);
-    }, [currentPuzzle]);
-    
     const handlePuzzleChange = () => {
         if (puzzleIndex < puzzles.length - 1) {
-            console.log(`puzzleIndex = ${puzzleIndex}`);
             setPuzzleIndex(puzzleIndex + 1);
         } else {
             setPuzzleIndex(0);
