@@ -9,14 +9,16 @@ export default function Game() {
 	const handleModeChange = (mode: string) => {
 		if (mode === "INSERT" || mode === "MARK" || mode === "SELECT") {
 			setCurrentMode(mode);
-			console.log(`currentMode = ${currentMode}`)
+			console.log(`currentMode = ${currentMode}`);
 		}
 	};
 
 	return (
 		<>
 			<div className="flex justify-center items-center">
-				<SudokuGrid currentMode={currentMode} />
+				<SudokuGrid
+					currentMode={currentMode}
+				/>
 			</div>
 			<div className="mb-8 mt-2 flex justify-center">
 				<button
