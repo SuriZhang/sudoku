@@ -10,10 +10,10 @@ export default async function Home() {
 
 			<div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
 				<Game />
-				<button className="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-					show answer
-				</button>
 			</div>
+			<button className="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+				show answer
+			</button>
 		</main>
 	);
 }

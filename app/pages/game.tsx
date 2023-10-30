@@ -15,10 +15,8 @@ export default function Game() {
 
 	return (
 		<>
-			<div className="flex justify-center items-center">
-				<SudokuGrid
-					currentMode={currentMode}
-				/>
+			<div className="container mx-2xl justify-center items-center w-200 h-200">
+				<SudokuGrid currentMode={currentMode} />
 			</div>
 			<div className="mb-8 mt-2 flex justify-center">
 				<button

@@ -36,7 +36,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		setCurrentPuzzle(puzzles[puzzleIndex]);
 		init(currentPuzzle);
 		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
-	}, [puzzles, puzzleIndex]);
+	}, [puzzles, currentPuzzle, puzzleIndex]);
 
 	const handlePuzzleChange = () => {
 		if (puzzleIndex < puzzles.length - 1) {
@@ -69,7 +69,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 					)}
 				</ModeContext.Provider>
 			</div>
-			<div>
+			<div className="p-5">
 				<button
 					className={`mr-2 bg-blue-500
 					hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
