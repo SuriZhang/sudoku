@@ -136,27 +136,30 @@ export const useCalculateGridInfo = () => {
 
 	const init = (puzzle: string) => {
 		console.log(`init.puzzle = ${puzzle}`);
-		let gridInfo: GridInfo[][] = [];
-		for (let r: number = 0; r < 9; r++) {
-			gridInfo[r] = [];
-			for (let c = 0; c < 9; c++) {
-				let initValue: string | number =
-					puzzle !== undefined
-						? puzzle.charAt(r * 9 + c)
-						: 0;
-				if (initValue === ".") {
-					initValue = 0;
-				}
-				gridInfo[r][c] = {
-					x: r,
-					y: c,
-					isEditable: initValue === 0,
-					value: Number(initValue),
-					isConflict: false,
-					isSelected: false,
-				};
-			}
+		if (puzzle === "") {
+			console.log("puzzle is empty");
 		}
+		
+		let gridInfo: GridInfo[][] = [];
+		if (puzzle !== "" && puzzle !== undefined) {
+			for (let r: number = 0; r < 9; r++) {
+				gridInfo[r] = [];
+				for (let c = 0; c < 9; c++) {
+					let initValue: string | number = puzzle.charAt(r * 9 + c);
+					if (initValue === ".") {
+						initValue = 0;
+					}
+					gridInfo[r][c] = {
+						x: r,
+						y: c,
+						isEditable: initValue === 0,
+						value: Number(initValue),
+						isConflict: false,
+						isSelected: false,
+					};
+				}
+			}
+		} 
 		setPuzzleGrid(gridInfo);
 	};
 

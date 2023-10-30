@@ -31,7 +31,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 
 	useEffect(() => {
 		setCurrentPuzzle(puzzles[puzzleIndex]);
-		init(puzzles[puzzleIndex]);
+		init(currentPuzzle);
 		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
 	}, [puzzles, puzzleIndex]);
 
@@ -62,12 +62,14 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 					)}
 				</ModeContext.Provider>
 			</div>
-			<button
-				className={`mr-2 bg-blue-500
+			<div>
+				<button
+					className={`mr-2 bg-blue-500
 					hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
-				onClick={() => handlePuzzleChange()}>
-				next puzzle
-			</button>
+					onClick={() => handlePuzzleChange()}>
+					next puzzle
+				</button>
+			</div>
 		</>
 	);
 };
