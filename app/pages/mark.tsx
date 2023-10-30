@@ -11,7 +11,7 @@ export const Mark = (props: MarkProps) => {
 	return (
 		<div
 			className={`row-start-${Math.floor((props.markValue - 1) / 3) + 1}
-			 col-start-${((props.markValue - 1) % 3) + 1} text-xs`}>
+			 col-start-${((props.markValue - 1) % 3) + 1} text-sm`}>
 			{props.markValue === 0 ? "" : props.markValue}
 		</div>
 	);
