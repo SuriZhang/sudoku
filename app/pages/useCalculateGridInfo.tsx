@@ -8,12 +8,9 @@ export interface GridInfo {
 	y: number;
 	value: number;
 	isConflict: boolean;
-	// isHighlighted: boolean;
 	isSelected?: boolean;
 	isEditable?: boolean;
 }
-
-// type SelectedCellInfo = [number, number];
 
 export const useCalculateGridInfo = () => {
 	const [puzzleGrid, setPuzzleGrid] = useState<GridInfo[][]>([]);
@@ -125,18 +122,6 @@ export const useCalculateGridInfo = () => {
 		setPuzzleGrid(updatedGrid);
 	};
 
-	// clear all highlights
-	const clearHighlights = (grid: GridInfo[][]): GridInfo[][] => {
-		const updatedGrid = grid.map((row, rowIndex) => {
-			row.map((cell, colIndex) => {
-				// cell.isHighlighted = false;
-				return cell;
-			});
-			return row;
-		});
-		return updatedGrid;
-	};
-
 	const clearSelectedCells = (grid: GridInfo[][]) => {
 		console.log("clearSelectedCells");
 		// remove all selected cells
@@ -199,7 +184,6 @@ export const useCalculateGridInfo = () => {
 						isEditable: initValue === 0,
 						value: Number(initValue),
 						isConflict: false,
-						// isHighlighted: false,
 						isSelected: false,
 					};
 				}
