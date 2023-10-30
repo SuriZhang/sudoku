@@ -2,21 +2,34 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Cell } from "./cell";
-import { useCalculateGridInfo } from "./useCalculateGridInfo";
+import { GridInfo, useCalculateGridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
 import { getPuzzles } from "../utils/puzzleLoader";
 import { Loading } from "./loading";
 
 export const SudokuGrid = (props: { currentMode: string }) => {
-	const { init, onCellValueChange, onCellClick, puzzleGrid, setPuzzleGrid , clearSelectedCells } =
-		useCalculateGridInfo();
+	const {
+		init,
+		onCellValueChange,
+		onCellClick,
+		puzzleGrid,
+		clearSelectedCells,
+	} = useCalculateGridInfo();
 
 	const [puzzles, setPuzzles] = useState<string[]>([]);
 	const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
 
-	const isLoading = puzzles.length === 0;
+	// to keep track of previous puzzleGrid, used to clear selected cells
+	const previousPuzzleGridRef = useRef<GridInfo[][]>(puzzleGrid);
 	// to handle outside div click
-	const ref = useRef<HTMLDivElement>(null);
+	const outerDivRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		// Update the previousPuzzleGrid when puzzleGrid changes
+		previousPuzzleGridRef.current = puzzleGrid;
+	}, [puzzleGrid]);
+
+	const isLoading = puzzles.length === 0;
 
 	// ensure that the puzzles are fetched before initializing the grid
 	// only run once
@@ -30,12 +43,10 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 			}
 		};
 		fetchPuzzles();
-		console.log(`puzzles = ${puzzles}`);
 	}, []);
 
 	useEffect(() => {
 		init(puzzles[puzzleIndex]);
-		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
 	}, [puzzles, puzzleIndex]);
 
 	const handlePuzzleChange = () => {
@@ -48,9 +59,12 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 
 	useEffect(() => {
 		const handleOutSideClick = (event: MouseEvent) => {
-			if (ref.current && !ref.current?.contains(event.target as Node)) {
-				console.log("outside click");
-				// TODO: clear all selected cells and highlights
+			if (
+				outerDivRef.current &&
+				!outerDivRef.current?.contains(event.target as Node)
+			) {
+				// clear all selected cells and highlights
+				clearSelectedCells(previousPuzzleGridRef.current);
 			}
 		};
 
@@ -59,11 +73,13 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		return () => {
 			window.removeEventListener("mousedown", handleOutSideClick);
 		};
-	}, [ref]);
+	}, [outerDivRef]);
 
 	return (
 		<>
-			<div className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0" ref={ref}>
+			<div
+				className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0"
+				ref={outerDivRef}>
 				<ModeContext.Provider value={props.currentMode}>
 					{isLoading ? (
 						<Loading />

@@ -8,7 +8,7 @@ export interface GridInfo {
 	y: number;
 	value: number;
 	isConflict: boolean;
-	isHighlighted: boolean;
+	// isHighlighted: boolean;
 	isSelected?: boolean;
 	isEditable?: boolean;
 }
@@ -129,7 +129,7 @@ export const useCalculateGridInfo = () => {
 	const clearHighlights = (grid: GridInfo[][]): GridInfo[][] => {
 		const updatedGrid = grid.map((row, rowIndex) => {
 			row.map((cell, colIndex) => {
-				cell.isHighlighted = false;
+				// cell.isHighlighted = false;
 				return cell;
 			});
 			return row;
@@ -142,7 +142,6 @@ export const useCalculateGridInfo = () => {
 		let updatedGrid = clearHighlights(grid);
 		updatedGrid = grid.map((row) => {
 			row.map((cell) => {
-				
 				cell.isSelected = false;
 				return cell;
 			});
@@ -150,7 +149,6 @@ export const useCalculateGridInfo = () => {
 		});
 		
 		setPuzzleGrid(updatedGrid);
-		// setSelectedCells([]);
 	}
 
 	const onCellClick = (x: number, y: number) => {
@@ -161,9 +159,8 @@ export const useCalculateGridInfo = () => {
 				row.map((cell, colIndex) => {
 					if (colIndex == y) {
 						// double click cancels the selection
-						cell.isHighlighted = !cell.isHighlighted;
+						// cell.isHighlighted = !cell.isHighlighted;
 						cell.isSelected = !cell.isSelected;
-						console.log(`cell props = ${JSON.stringify(cell)}`)
 					}
 					return cell;
 				});
@@ -194,7 +191,7 @@ export const useCalculateGridInfo = () => {
 						isEditable: initValue === 0,
 						value: Number(initValue),
 						isConflict: false,
-						isHighlighted: false,
+						// isHighlighted: false,
 						isSelected: false,
 					};
 				}

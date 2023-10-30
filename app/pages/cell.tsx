@@ -22,7 +22,7 @@ export const Cell = (props: CellProps) => {
 	const currentMode = useContext(ModeContext);
 
 	const handleOnMarkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		console.log(`e.key = ${e.key}`);
+
 		let newMarkValues = [...markValues];
 		if (e.key === "Backspace") {
 			// return the last element of the array
@@ -54,7 +54,6 @@ export const Cell = (props: CellProps) => {
 	};
 
 	const handleOnValueKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		console.log(`e.key = ${e.key}`);
 		if (e.key === "Backspace") {
 			props.onValueChange(props.x, props.y, 0);
 		} else if (e.key.match(/[1-9]/)) {
@@ -73,12 +72,11 @@ export const Cell = (props: CellProps) => {
 				tabIndex={allowEdit ? 0 : -1}
 				className={`flex h-full w-full justify-center aspect-square 
                     border p-0 text-sm text-center
-					${props.isSelected ? "border-1 border-red-500" : "boarder-1 border-black"}
+					${props.isSelected ? "border-2 border-blue-700" : "boarder-1 border-black"}
                     row-start-${props.x + 1} col-start-${props.y + 1}
                     ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2"}
                     ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2"}
-                    ${props.isConflict ? "text-red-500" : "text-black"}
-                    ${props.isHighlighted && "bg-yellow-200"}
+                    ${props.isConflict ? "text-red-500 bg-red-200" : "text-black"}
                     `}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
@@ -99,25 +97,15 @@ export const Cell = (props: CellProps) => {
 		return (
 			<div
 				tabIndex={props.isEditable ? 0 : -1}
-				className={`h-full w-full flex items-center justify-center font-bold aspect-square 
-                        border boarder-1 border-black p-0 text-2xl 
-                        row-start-${props.x + 1} col-start-${props.y + 1} 
+				className={`h-full w-full flex items-center justify-center font-bold aspect-square
+				        border boarder-1 border-black p-0 text-2xl
+				        row-start-${props.x + 1} col-start-${props.y + 1}
 						caret-transparent
-                        ${
-							(props.x + 1) % 3 === 0 &&
-							props.x !== 8 &&
-							"border-b-2 border-black"
-						}
-                        ${
-							(props.y + 1) % 3 === 0 &&
-							props.y !== 8 &&
-							"border-r-2 border-black"
-						}
-						${props.isSelected && "border-2 border-red"}
-                        ${props.isConflict ? "text-red-500" : "text-black"}
-                        ${props.isHighlighted && "bg-yellow-200"
-					}
-                    `}
+				        ${(props.x + 1) % 3 === 0 && props.x !== 8 &&"border-b-2 border-black"}
+				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
+						${props.isSelected ? "border-2 border-blue-700": "border-1 border-black"}
+				        ${props.isConflict ? "text-red-500 bg-red-200" : "text-black"}
+				    `}
 				onKeyDown={handleOnValueKeyDown}
 				onClick={handleOnClick}>
 				{props.value === 0 ? "" : props.value}
