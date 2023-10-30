@@ -102,7 +102,8 @@ export const Cell = (props: CellProps) => {
 			<input
 				className={`flex h-full w-full justify-center font-bold aspect-square 
                         border boarder-1 border-black p-0 text-2xl text-center
-                        row-start-${props.x + 1} col-start-${props.y + 1}
+                        row-start-${props.x + 1} col-start-${props.y + 1} 
+						caret-transparent
                         ${
 							(props.x + 1) % 3 === 0 &&
 							props.x !== 8 &&
