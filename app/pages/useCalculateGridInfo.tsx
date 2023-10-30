@@ -13,11 +13,11 @@ export interface GridInfo {
 	isEditable?: boolean;
 }
 
-type SelectedCellInfo = [number, number];
+// type SelectedCellInfo = [number, number];
 
 export const useCalculateGridInfo = () => {
 	const [puzzleGrid, setPuzzleGrid] = useState<GridInfo[][]>([]);
-	// const [selectedCells, setSelectedCells] = useState<SelectedCellInfo[]>([]);
+	const [selectedCells, setSelectedCells] = useState<GridInfo[]>([]);
 
 	// simply fills the new cell value in the grid
 	const fillCellValue = (
@@ -138,9 +138,15 @@ export const useCalculateGridInfo = () => {
 	};
 
 	const clearSelectedCells = (grid: GridInfo[][]) => {
+		console.log("clearSelectedCells");
+		// remove all selected cells
+		setSelectedCells([]);
+
+		console.log(
+			`clearSelectedCells.selectedCells = ${JSON.stringify(selectedCells)}`
+		);
 		// clear all selected cells
-		let updatedGrid = clearHighlights(grid);
-		updatedGrid = grid.map((row) => {
+		let updatedGrid = grid.map((row) => {
 			row.map((cell) => {
 				cell.isSelected = false;
 				return cell;
@@ -151,15 +157,16 @@ export const useCalculateGridInfo = () => {
 		setPuzzleGrid(updatedGrid);
 	}
 
-	const onCellClick = (x: number, y: number) => {
-		// only hightlight the last selected cell
-		let updatedGrid = clearHighlights(puzzleGrid);
-		updatedGrid = puzzleGrid.map((row, rowIndex) => {
+	const onCellClick = (x: number, y: number, isMultiSelect: boolean) => {
+		console.log(`isMultiSelect = ${isMultiSelect}`)
+		// if not multi-select, clear existing selects
+		if (!isMultiSelect) { clearSelectedCells(puzzleGrid); }
+		setSelectedCells([...selectedCells, puzzleGrid[x][y]]);
+		let updatedGrid = puzzleGrid.map((row, rowIndex) => {
 			if (rowIndex == x) {
 				row.map((cell, colIndex) => {
 					if (colIndex == y) {
 						// double click cancels the selection
-						// cell.isHighlighted = !cell.isHighlighted;
 						cell.isSelected = !cell.isSelected;
 					}
 					return cell;
@@ -168,6 +175,7 @@ export const useCalculateGridInfo = () => {
 			return row;
 		});
 		setPuzzleGrid(updatedGrid);
+		console.log(`selectedCells = ${JSON.stringify(selectedCells)}`)
 	};
 
 	const init = (puzzle: string) => {

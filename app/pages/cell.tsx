@@ -6,7 +6,7 @@ import { GridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
 
 interface CellProps extends GridInfo {
-	onClick: (x: number, y: number) => void;
+	onClick: (x: number, y: number, isMultiSelect: boolean) => void;
 	onValueChange: (x: number, y: number, value: number) => void;
 }
 
@@ -22,8 +22,12 @@ export const Cell = (props: CellProps) => {
 	const currentMode = useContext(ModeContext);
 
 	const handleOnMarkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-
+		// if shift is pressed, do nothing
+		if (e.shiftKey) {
+			return;
+		}
 		let newMarkValues = [...markValues];
+
 		if (e.key === "Backspace") {
 			// return the last element of the array
 			let lastMark = marArray[marArray.length - 1];
@@ -54,6 +58,10 @@ export const Cell = (props: CellProps) => {
 	};
 
 	const handleOnValueKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.shiftKey) {
+			console.log("handleOnValueKeyDown: Shift key is pressed");
+			return;
+		}
 		if (e.key === "Backspace") {
 			props.onValueChange(props.x, props.y, 0);
 		} else if (e.key.match(/[1-9]/)) {
@@ -62,8 +70,13 @@ export const Cell = (props: CellProps) => {
 		}
 	};
 
-	const handleOnClick = () => {
-		props.onClick(props.x, props.y);
+	const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		let isMultiSelect = false;
+		if (e.shiftKey) {
+			console.log("Shift key is pressed");
+			isMultiSelect = true;
+		}
+		props.onClick(props.x, props.y, isMultiSelect);
 	};
 
 	const renderMarks = (allowEdit: boolean) => {
@@ -76,7 +89,7 @@ export const Cell = (props: CellProps) => {
                     row-start-${props.x + 1} col-start-${props.y + 1}
                     ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2"}
                     ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2"}
-                    ${props.isConflict ? "text-red-500 bg-red-200" : "text-black"}
+                    ${props.isConflict ? "text-red-500 bg-red-200" : "text-black" }
                     `}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
@@ -98,12 +111,12 @@ export const Cell = (props: CellProps) => {
 			<div
 				tabIndex={props.isEditable ? 0 : -1}
 				className={`h-full w-full flex items-center justify-center font-bold aspect-square
-				        border boarder-1 border-black p-0 text-2xl
+				        border boarder-1 border-black p-0 text-2xl select-none
 				        row-start-${props.x + 1} col-start-${props.y + 1}
 						caret-transparent
-				        ${(props.x + 1) % 3 === 0 && props.x !== 8 &&"border-b-2 border-black"}
+				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
 				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
-						${props.isSelected ? "border-2 border-blue-700": "border-1 border-black"}
+						${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
 				        ${props.isConflict ? "text-red-500 bg-red-200" : "text-black"}
 				    `}
 				onKeyDown={handleOnValueKeyDown}
