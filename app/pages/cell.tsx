@@ -53,21 +53,6 @@ export const Cell = (props: CellProps) => {
 		console.log(`markValues = ${markValues}`);
 	};
 
-	const handleOnValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let inputValue: string | number = e.target.value;
-		// validate if input is a number
-		if (/^\d*$/.test(inputValue)) {
-			inputValue = parseInt(inputValue.slice(0, 1));
-			console.log(
-				`inputValue = ${inputValue}, cellValue = ${props.value}`
-			);
-			console.log(`currentMode = ${currentMode}`);
-			props.onValueChange(props.x, props.y, inputValue);
-		} else {
-			props.onValueChange(props.x, props.y, 0);
-		}
-	};
-
 	const handleOnValueKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		console.log(`e.key = ${e.key}`);
 		if (e.key === "Backspace") {
@@ -138,13 +123,10 @@ export const Cell = (props: CellProps) => {
                         ${props.isConflict ? "text-red-500" : "text-black"}
                         ${props.isSelected && "bg-yellow-200"}
                     `}
-				// onChange={handleOnValueChange}
 				onKeyDown={handleOnValueKeyDown}
-				// readOnly={!props.isEditable}
 				onClick={handleOnClick}>
 				{props.value === 0 ? "" : props.value}
 			</div>
-			// />
 		);
 	};
 
