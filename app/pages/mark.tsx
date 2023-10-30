@@ -10,10 +10,8 @@ interface MarkProps extends GridInfo {
 export const Mark = (props: MarkProps) => {
 	return (
 		<div
-			className={`row-start-${
-				Math.floor((props.markValue - 1) / 3) + 1
-			} col-start-${((props.markValue - 1) % 3) + 1}
-		row-span-1 col-span-1`}>
+			className={`row-start-${Math.floor((props.markValue - 1) / 3) + 1}
+			 col-start-${((props.markValue - 1) % 3) + 1} text-xs`}>
 			{props.markValue === 0 ? "" : props.markValue}
 		</div>
 	);

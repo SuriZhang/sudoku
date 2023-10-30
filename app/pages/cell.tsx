@@ -13,7 +13,9 @@ interface CellProps extends GridInfo {
 // information that is exclusive to current cell
 export const Cell = (props: CellProps) => {
 	// marks for cell
-	const [markValues, setMarkValues] = useState<number[]>([]);
+	const [markValues, setMarkValues] = useState<number[]>([
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+	]);
 
 	const currentMode = useContext(ModeContext);
 
@@ -25,24 +27,20 @@ export const Cell = (props: CellProps) => {
 			setMarkValues(markValues.slice(0, markValues.length - 1));
 		} else if (e.key.match(/[1-9]/)) {
 			let inputValue: number = parseInt(e.key.slice(0, 1));
-
+			let newMarkValues = [...markValues];
 			// if in INSERT MODE, treat as fill cell value, hide marks
 			if (currentMode === "INSERT") {
 				props.onValueChange(props.x, props.y, inputValue);
 				return;
 			}
 			if (markValues.includes(inputValue)) {
-				setMarkValues(
-					markValues.filter((mark: number) => mark !== inputValue)
-				);
+				// if mark already exists, remove it by setting back to 0
+				newMarkValues[inputValue - 1] = 0;
 			} else {
 				// add mark to the cell
-				// setMarkValues([...markValues, inputValue]);
-				
-				// sort the marks
-				const newMarkValues = [...markValues, inputValue].sort();
-				setMarkValues(newMarkValues);
+				newMarkValues[inputValue - 1] = inputValue;
 			}
+			setMarkValues(newMarkValues);
 		}
 		console.log(`markValues = ${markValues}`);
 	};
@@ -86,10 +84,10 @@ export const Cell = (props: CellProps) => {
                     `}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
-				<div className="grid grid-cols-3 grid-rows-3 gap-0 w-full h-full">
-					{...markValues.map((markValue: number) => (
+				<div className="grid grid-cols-3 grid-rows-3 gap-0 p-0 w-full h-full">
+					{...markValues.map((markValue: number, index: number) => (
 						<Mark
-							key={`${props.x}*9+${props.y}+${markValue}}`}
+							key={`${props.x}*9+${props.y}+${index}}`}
 							{...props}
 							markValue={markValue}
 						/>
@@ -141,9 +139,7 @@ export const Cell = (props: CellProps) => {
 	) {
 		// display regular cell
 		return <>{renderMarks(false)}</>;
-	}
-	// if (currentMode === "MARK" && props.value === 0)
-	else {
+	} else {
 		return <>{renderMarks(true)}</>;
 	}
 };
