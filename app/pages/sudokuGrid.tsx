@@ -13,7 +13,6 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 
 	const [puzzles, setPuzzles] = useState<string[]>([]);
 	const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
-	const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
 
 	const isLoading = puzzles.length === 0;
 	// to handle outside div click
@@ -35,10 +34,9 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 	}, []);
 
 	useEffect(() => {
-		setCurrentPuzzle(puzzles[puzzleIndex]);
-		init(currentPuzzle);
+		init(puzzles[puzzleIndex]);
 		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
-	}, [puzzles, currentPuzzle, puzzleIndex]);
+	}, [puzzles, puzzleIndex]);
 
 	const handlePuzzleChange = () => {
 		if (puzzleIndex < puzzles.length - 1) {
@@ -46,7 +44,6 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		} else {
 			setPuzzleIndex(0);
 		}
-		setCurrentPuzzle(puzzles[puzzleIndex]);
 	};
 
 	useEffect(() => {
