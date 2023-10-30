@@ -37,7 +37,11 @@ export const Cell = (props: CellProps) => {
 				);
 			} else {
 				// add mark to the cell
-				setMarkValues([...markValues, inputValue]);
+				// setMarkValues([...markValues, inputValue]);
+				
+				// sort the marks
+				const newMarkValues = [...markValues, inputValue].sort();
+				setMarkValues(newMarkValues);
 			}
 		}
 		console.log(`markValues = ${markValues}`);
@@ -65,7 +69,7 @@ export const Cell = (props: CellProps) => {
 			<div
 				tabIndex={allowEdit ? 0 : -1}
 				className={`flex h-full w-full justify-center aspect-square 
-                    border boarder-1 border-black p-0 text-sm text-center grid grid-cols-3 grid-rows-3 gap-0
+                    border boarder-1 border-black p-0 text-sm text-center
                     row-start-${props.x + 1} col-start-${props.y + 1}
                     ${
 						(props.x + 1) % 3 === 0 &&
@@ -82,13 +86,15 @@ export const Cell = (props: CellProps) => {
                     `}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
-				{...markValues.map((markValue: number) => (
-					<Mark
-						key={`${props.x}*9+${props.y}+${markValue}}`}
-						{...props}
-						markValue={markValue}
-					/>
-				))}
+				<div className="grid grid-cols-3 grid-rows-3 gap-0 w-full h-full">
+					{...markValues.map((markValue: number) => (
+						<Mark
+							key={`${props.x}*9+${props.y}+${markValue}}`}
+							{...props}
+							markValue={markValue}
+						/>
+					))}
+				</div>
 			</div>
 		);
 	};
