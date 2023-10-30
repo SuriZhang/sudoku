@@ -18,7 +18,7 @@ export default function Game() {
 			<div className="container mx-2xl justify-center items-center w-200 h-200">
 				<SudokuGrid currentMode={currentMode} />
 			</div>
-			<div className="mb-8 mt-2 flex justify-center">
+			<div className="mb-8 mt-2 flex justify-center p-5">
 				<button
 					className={`mr-2 
 					${currentMode === "INSERT" ? "bg-blue-500" : "bg-blue-300"} 
