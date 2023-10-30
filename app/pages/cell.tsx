@@ -21,6 +21,32 @@ export const Cell = (props: CellProps) => {
 
 	const currentMode = useContext(ModeContext);
 
+	const [isMultiSelect, setIsMultiSelect] = useState<boolean>(false);
+	
+	// hold shift key to enable multi-select
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.shiftKey) {
+				setIsMultiSelect(true);
+			}
+		};
+
+		const handleKeyUp = (event: KeyboardEvent) => {
+			if (!event.shiftKey) {
+				setIsMultiSelect(false);
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		window.addEventListener("keyup", handleKeyUp);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+			window.removeEventListener("keyup", handleKeyUp);
+		};
+	}, []);
+
+
 	const handleOnMarkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		// if shift is pressed, do nothing
 		if (e.shiftKey) {
