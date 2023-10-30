@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Mark } from "./mark";
 import { GridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
@@ -133,23 +133,51 @@ export const Cell = (props: CellProps) => {
 	};
 
 	const renderRegularCell = () => {
-		return (
-			<div
-				tabIndex={props.isEditable ? 0 : -1}
-				className={`h-full w-full flex items-center justify-center font-bold aspect-square
+		// dynamically configure cell text color and background color
+		let textColor: string = "text-black";
+		if (props.isConflict) {
+			textColor = "text-red-500";
+		} else if (!props.isEditable) {
+			textColor = "text-gray-500";
+		}
+
+		if (props.isEditable) {
+			// set tabIndex to 0 to enable keyboard input
+			return (
+				<div
+					tabIndex={0}
+					className={`h-full w-full flex items-center justify-center font-bold aspect-square
 				        border boarder-1 border-black p-0 text-2xl select-none
 				        row-start-${props.x + 1} col-start-${props.y + 1}
-						caret-transparent
+						caret-transparent ${textColor}
 				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
 				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
 						${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
-				        ${props.isConflict ? "text-red-500 bg-red-200" : "text-black"}
+				        ${props.isConflict && "bg-red-200"}
 				    `}
-				onKeyDown={handleOnValueKeyDown}
-				onClick={handleOnClick}>
-				{props.value === 0 ? "" : props.value}
-			</div>
-		);
+					onKeyDown={handleOnValueKeyDown}
+					onClick={handleOnClick}>
+					{props.value === 0 ? "" : props.value}
+				</div>
+			);
+		} else {
+			return (
+				<div
+					className={`h-full w-full flex items-center justify-center font-bold aspect-square
+				        border boarder-1 border-black p-0 text-2xl select-none
+				        row-start-${props.x + 1} col-start-${props.y + 1}
+						caret-transparent ${textColor}
+				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
+				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
+						${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
+				        ${props.isConflict && "bg-red-200"}
+				    `}
+					onKeyDown={handleOnValueKeyDown}
+					onClick={handleOnClick}>
+					{props.value === 0 ? "" : props.value}
+				</div>
+			);
+		}
 	};
 
 	// rendering cell

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export interface GridInfo {
 	// cell information that need to share with other cells in here
@@ -15,6 +15,15 @@ export interface GridInfo {
 export const useCalculateGridInfo = () => {
 	const [puzzleGrid, setPuzzleGrid] = useState<GridInfo[][]>([]);
 	const [selectedCells, setSelectedCells] = useState<GridInfo[]>([]);
+
+	// capture selected cells change
+	useEffect(() => {
+		// This callback will run whenever selectedCells changes.
+		console.log(
+			"Selected Cells have changed:",
+			JSON.stringify(selectedCells)
+		);
+	}, [selectedCells]);
 
 	// simply fills the new cell value in the grid
 	const fillCellValue = (
@@ -125,10 +134,11 @@ export const useCalculateGridInfo = () => {
 	const clearSelectedCells = (grid: GridInfo[][]) => {
 		console.log("clearSelectedCells");
 		// remove all selected cells
-		setSelectedCells([]);
 
 		console.log(
-			`clearSelectedCells.selectedCells = ${JSON.stringify(selectedCells)}`
+			`clearSelectedCells.selectedCells = ${JSON.stringify(
+				selectedCells
+			)}`
 		);
 		// clear all selected cells
 		let updatedGrid = grid.map((row) => {
@@ -138,15 +148,19 @@ export const useCalculateGridInfo = () => {
 			});
 			return row;
 		});
-		
+		setSelectedCells([]);
 		setPuzzleGrid(updatedGrid);
-	}
+	};
 
 	const onCellClick = (x: number, y: number, isMultiSelect: boolean) => {
-		console.log(`isMultiSelect = ${isMultiSelect}`)
+		console.log(`isMultiSelect = ${isMultiSelect}`);
 		// if not multi-select, clear existing selects
-		if (!isMultiSelect) { clearSelectedCells(puzzleGrid); }
-		setSelectedCells([...selectedCells, puzzleGrid[x][y]]);
+		if (!isMultiSelect) {
+			clearSelectedCells(puzzleGrid);
+			setSelectedCells([puzzleGrid[x][y]]);
+		} else {
+			setSelectedCells([...selectedCells, puzzleGrid[x][y]]);
+		}
 		let updatedGrid = puzzleGrid.map((row, rowIndex) => {
 			if (rowIndex == x) {
 				row.map((cell, colIndex) => {
@@ -160,7 +174,7 @@ export const useCalculateGridInfo = () => {
 			return row;
 		});
 		setPuzzleGrid(updatedGrid);
-		console.log(`selectedCells = ${JSON.stringify(selectedCells)}`)
+		console.log(`selectedCells = ${JSON.stringify(selectedCells)}`);
 	};
 
 	const init = (puzzle: string) => {
