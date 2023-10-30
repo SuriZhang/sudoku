@@ -33,7 +33,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		setCurrentPuzzle(puzzles[puzzleIndex]);
 		init(puzzles[puzzleIndex]);
 		console.log(`sudokuGrid.currentPuzzle = ${puzzles[puzzleIndex]}`);
-	}, [currentPuzzle, puzzleIndex]);
+	}, [puzzles, puzzleIndex]);
 
 	const handlePuzzleChange = () => {
 		if (puzzleIndex < puzzles.length - 1) {
