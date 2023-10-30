@@ -72,20 +72,13 @@ export const Cell = (props: CellProps) => {
 			<div
 				tabIndex={allowEdit ? 0 : -1}
 				className={`flex h-full w-full justify-center aspect-square 
-                    border boarder-1 border-black p-0 text-sm text-center
+                    border p-0 text-sm text-center
+					${props.isSelected ? "border-1 border-red-500" : "boarder-1 border-black"}
                     row-start-${props.x + 1} col-start-${props.y + 1}
-                    ${
-						(props.x + 1) % 3 === 0 &&
-						props.x !== 8 &&
-						"border-b-2 border-black"
-					}
-                    ${
-						(props.y + 1) % 3 === 0 &&
-						props.y !== 8 &&
-						"border-r-2 border-black"
-					}
+                    ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2"}
+                    ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2"}
                     ${props.isConflict ? "text-red-500" : "text-black"}
-                    ${props.isSelected && "bg-yellow-200"}
+                    ${props.isHighlighted && "bg-yellow-200"}
                     `}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
@@ -120,8 +113,10 @@ export const Cell = (props: CellProps) => {
 							props.y !== 8 &&
 							"border-r-2 border-black"
 						}
+						${props.isSelected && "border-2 border-red"}
                         ${props.isConflict ? "text-red-500" : "text-black"}
-                        ${props.isSelected && "bg-yellow-200"}
+                        ${props.isHighlighted && "bg-yellow-200"
+					}
                     `}
 				onKeyDown={handleOnValueKeyDown}
 				onClick={handleOnClick}>

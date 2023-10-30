@@ -8,12 +8,16 @@ export interface GridInfo {
 	y: number;
 	value: number;
 	isConflict: boolean;
-	isSelected: boolean;
+	isHighlighted: boolean;
+	isSelected?: boolean;
 	isEditable?: boolean;
 }
 
+type SelectedCellInfo = [number, number];
+
 export const useCalculateGridInfo = () => {
 	const [puzzleGrid, setPuzzleGrid] = useState<GridInfo[][]>([]);
+	// const [selectedCells, setSelectedCells] = useState<SelectedCellInfo[]>([]);
 
 	// simply fills the new cell value in the grid
 	const fillCellValue = (
@@ -105,25 +109,61 @@ export const useCalculateGridInfo = () => {
 	const onCellValueChange = (x: number, y: number, newValue: number) => {
 		let updatedGrid: GridInfo[][] = [];
 
-		if (Number.isNaN(newValue) || newValue === 0 || puzzleGrid[x][y].value === newValue) {
+		if (
+			Number.isNaN(newValue) ||
+			newValue === 0 ||
+			puzzleGrid[x][y].value === newValue
+		) {
 			// if user enters backspace or the same value again, remove the cell value
 			// and clear all conflicts
 			updatedGrid = clearConflicts(fillCellValue(x, y, 0));
 		} else {
-			updatedGrid = clearConflicts(puzzleGrid)
+			updatedGrid = clearConflicts(puzzleGrid);
 			updatedGrid = validateAndUpdateCell(x, y, newValue);
 		}
 
 		setPuzzleGrid(updatedGrid);
 	};
 
+	// clear all highlights
+	const clearHighlights = (grid: GridInfo[][]): GridInfo[][] => {
+		const updatedGrid = grid.map((row, rowIndex) => {
+			row.map((cell, colIndex) => {
+				cell.isHighlighted = false;
+				return cell;
+			});
+			return row;
+		});
+		return updatedGrid;
+	};
+
+	const clearSelectedCells = (grid: GridInfo[][]) => {
+		// clear all selected cells
+		let updatedGrid = clearHighlights(grid);
+		updatedGrid = grid.map((row) => {
+			row.map((cell) => {
+				
+				cell.isSelected = false;
+				return cell;
+			});
+			return row;
+		});
+		
+		setPuzzleGrid(updatedGrid);
+		// setSelectedCells([]);
+	}
+
 	const onCellClick = (x: number, y: number) => {
-		const updatedGrid = puzzleGrid.map((row, rowIndex) => {
+		// only hightlight the last selected cell
+		let updatedGrid = clearHighlights(puzzleGrid);
+		updatedGrid = puzzleGrid.map((row, rowIndex) => {
 			if (rowIndex == x) {
 				row.map((cell, colIndex) => {
 					if (colIndex == y) {
 						// double click cancels the selection
+						cell.isHighlighted = !cell.isHighlighted;
 						cell.isSelected = !cell.isSelected;
+						console.log(`cell props = ${JSON.stringify(cell)}`)
 					}
 					return cell;
 				});
@@ -138,7 +178,7 @@ export const useCalculateGridInfo = () => {
 		if (puzzle === "") {
 			console.log("puzzle is empty");
 		}
-		
+
 		let gridInfo: GridInfo[][] = [];
 		if (puzzle !== "" && puzzle !== undefined) {
 			for (let r: number = 0; r < 9; r++) {
@@ -154,18 +194,22 @@ export const useCalculateGridInfo = () => {
 						isEditable: initValue === 0,
 						value: Number(initValue),
 						isConflict: false,
+						isHighlighted: false,
 						isSelected: false,
 					};
 				}
 			}
-		} 
+		}
 		setPuzzleGrid(gridInfo);
 	};
 
 	return {
-		onValueChange: onCellValueChange,
+		onCellValueChange,
 		onCellClick,
 		puzzleGrid,
+		setPuzzleGrid,
+		// selectedCells,
+		clearSelectedCells,
 		init,
 	};
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Cell } from "./cell";
 import { useCalculateGridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
@@ -8,14 +8,16 @@ import { getPuzzles } from "../utils/puzzleLoader";
 import { Loading } from "./loading";
 
 export const SudokuGrid = (props: { currentMode: string }) => {
-	const { init, onValueChange, onCellClick, puzzleGrid } =
+	const { init, onCellValueChange, onCellClick, puzzleGrid, setPuzzleGrid , clearSelectedCells } =
 		useCalculateGridInfo();
 
 	const [puzzles, setPuzzles] = useState<string[]>([]);
 	const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
 	const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
 
-	const isLoading = puzzleGrid.length === 0;
+	const isLoading = puzzles.length === 0;
+	// to handle outside div click
+	const ref = useRef<HTMLDivElement>(null);
 
 	// ensure that the puzzles are fetched before initializing the grid
 	// only run once
@@ -47,9 +49,24 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		setCurrentPuzzle(puzzles[puzzleIndex]);
 	};
 
+	useEffect(() => {
+		const handleOutSideClick = (event: MouseEvent) => {
+			if (ref.current && !ref.current?.contains(event.target as Node)) {
+				console.log("outside click");
+				// TODO: clear all selected cells and highlights
+			}
+		};
+
+		window.addEventListener("mousedown", handleOutSideClick);
+
+		return () => {
+			window.removeEventListener("mousedown", handleOutSideClick);
+		};
+	}, [ref]);
+
 	return (
 		<>
-			<div className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0">
+			<div className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0" ref={ref}>
 				<ModeContext.Provider value={props.currentMode}>
 					{isLoading ? (
 						<Loading />
@@ -60,7 +77,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 									<Cell
 										key={`${cell.x}*9+${cell.y}`}
 										{...cell}
-										onValueChange={onValueChange}
+										onValueChange={onCellValueChange}
 										onClick={onCellClick}
 									/>
 								);
