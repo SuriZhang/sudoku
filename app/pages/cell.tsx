@@ -3,7 +3,7 @@
 import React, { useContext, useState } from "react";
 import { Mark } from "./mark";
 import { GridInfo } from "./useCalculateGridInfo";
-import { ModeContext } from "./modeContext";
+import { ModeContext } from "../utils/modeContext";
 
 interface CellProps extends GridInfo {
 	onClick: (x: number, y: number) => void;

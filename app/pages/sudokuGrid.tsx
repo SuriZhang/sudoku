@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Cell } from "./cell";
 import { useCalculateGridInfo } from "./useCalculateGridInfo";
-import { ModeContext } from "./modeContext";
-import { getPuzzles } from "../utils/loadPuzzles";
+import { ModeContext } from "../utils/modeContext";
+import { getPuzzles } from "../utils/puzzleLoader";
 import { Loading } from "./loading";
 
 export const SudokuGrid = (props: { currentMode: string }) => {

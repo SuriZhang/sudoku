@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getRandomIndex, getRandomNumber } from "../utils/random";
-import { getPuzzles } from "../utils/loadPuzzles";
+import { getPuzzles } from "../utils/puzzleLoader";
 
 export interface GridInfo {
 	// cell information that need to share with other cells in here
