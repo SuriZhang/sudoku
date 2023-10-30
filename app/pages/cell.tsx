@@ -12,36 +12,44 @@ interface CellProps extends GridInfo {
 
 // information that is exclusive to current cell
 export const Cell = (props: CellProps) => {
-	// marks for cell
+	// marks for cell, used to render correct postion of marks
 	const [markValues, setMarkValues] = useState<number[]>([
 		0, 0, 0, 0, 0, 0, 0, 0, 0,
 	]);
+	// used to keep track of order of insertion, used to remove marks using backspace
+	const [marArray, setMarkArray] = useState<number[]>([]);
 
 	const currentMode = useContext(ModeContext);
 
 	const handleOnMarkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		console.log(`e.key = ${e.key}`);
-
+		let newMarkValues = [...markValues];
 		if (e.key === "Backspace") {
-			// remove last mark
-			setMarkValues(markValues.slice(0, markValues.length - 1));
+			// return the last element of the array
+			let lastMark = marArray[marArray.length - 1];
+			// remove last mark from markArray and markValues
+			newMarkValues[lastMark - 1] = 0;
+			setMarkArray(marArray.slice(0, marArray.length - 1));
 		} else if (e.key.match(/[1-9]/)) {
 			let inputValue: number = parseInt(e.key.slice(0, 1));
-			let newMarkValues = [...markValues];
 			// if in INSERT MODE, treat as fill cell value, hide marks
 			if (currentMode === "INSERT") {
 				props.onValueChange(props.x, props.y, inputValue);
 				return;
 			}
 			if (markValues.includes(inputValue)) {
+				// remove from markArray
+				setMarkArray(marArray.filter((mark) => mark !== inputValue));
 				// if mark already exists, remove it by setting back to 0
 				newMarkValues[inputValue - 1] = 0;
 			} else {
+				// add to markArray
+				setMarkArray([...marArray, inputValue]);
 				// add mark to the cell
 				newMarkValues[inputValue - 1] = inputValue;
 			}
-			setMarkValues(newMarkValues);
 		}
+		setMarkValues(newMarkValues);
 		console.log(`markValues = ${markValues}`);
 	};
 
@@ -112,7 +120,7 @@ export const Cell = (props: CellProps) => {
 	const renderRegularCell = () => {
 		return (
 			<div
-				tabIndex={props.isEditable? 0 : -1}
+				tabIndex={props.isEditable ? 0 : -1}
 				className={`h-full w-full flex items-center justify-center font-bold aspect-square 
                         border boarder-1 border-black p-0 text-2xl 
                         row-start-${props.x + 1} col-start-${props.y + 1} 
