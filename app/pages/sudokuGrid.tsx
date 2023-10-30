@@ -5,6 +5,7 @@ import { Cell } from "./cell";
 import { useCalculateGridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "./modeContext";
 import { getPuzzles } from "../utils/loadPuzzles";
+import { Loading } from "./loading";
 
 export const SudokuGrid = (props: { currentMode: string }) => {
 	const { init, onValueChange, onCellClick, puzzleGrid } =
@@ -13,6 +14,8 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 	const [puzzles, setPuzzles] = useState<string[]>([]);
 	const [puzzleIndex, setPuzzleIndex] = useState<number>(0);
 	const [currentPuzzle, setCurrentPuzzle] = useState<string>("");
+
+	const isLoading = puzzleGrid.length === 0;
 
 	// ensure that the puzzles are fetched before initializing the grid
 	// only run once
@@ -48,17 +51,21 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 		<>
 			<div className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0">
 				<ModeContext.Provider value={props.currentMode}>
-					{puzzleGrid.flatMap((row) =>
-						row.map((cell) => {
-							return (
-								<Cell
-									key={`${cell.x}*9+${cell.y}`}
-									{...cell}
-									onValueChange={onValueChange}
-									onClick={onCellClick}
-								/>
-							);
-						})
+					{isLoading ? (
+						<Loading />
+					) : (
+						puzzleGrid.flatMap((row) =>
+							row.map((cell) => {
+								return (
+									<Cell
+										key={`${cell.x}*9+${cell.y}`}
+										{...cell}
+										onValueChange={onValueChange}
+										onClick={onCellClick}
+									/>
+								);
+							})
+						)
 					)}
 				</ModeContext.Provider>
 			</div>
