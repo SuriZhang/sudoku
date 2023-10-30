@@ -107,11 +107,12 @@ export const useCalculateGridInfo = () => {
 	const onCellValueChange = (x: number, y: number, newValue: number) => {
 		let updatedGrid: GridInfo[][] = [];
 
-		if (Number.isNaN(newValue) || puzzleGrid[x][y].value === newValue) {
+		if (Number.isNaN(newValue) || newValue === 0 || puzzleGrid[x][y].value === newValue) {
 			// if user enters backspace or the same value again, remove the cell value
 			// and clear all conflicts
 			updatedGrid = clearConflicts(fillCellValue(x, y, 0));
 		} else {
+			updatedGrid = clearConflicts(puzzleGrid)
 			updatedGrid = validateAndUpdateCell(x, y, newValue);
 		}
 
