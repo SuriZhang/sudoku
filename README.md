@@ -1,4 +1,4 @@
-# Feature Lists:
+# Feature Highlights:
 Besides standard functions of a Sudoku game, this project has the following noticeable features.
 1. Two game modes are implemented: `INSERT` and `MARK`.   
 Legal input contains only digits 1-9, and backspace keydown event. If a digit is entered twice, it is considered as removal. Backspace always removes the value in the current cell or the most recently entered mark value.  
