@@ -6,6 +6,7 @@ import { GridInfo, useCalculateGridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
 import { getPuzzles } from "../utils/puzzleLoader";
 import { Loading } from "./loadingAnimation";
+import { PiArrowCircleRightBold } from "react-icons/pi";
 
 export const SudokuGrid = (props: { currentMode: string }) => {
 	const {
@@ -82,7 +83,9 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 			) : (
 				<>
 					<div
-						className={`grid ${ !isLoading && "bg-white"} grid-rows-9 grid-cols-9 gap-0 p-0 apsect-square`}
+						className={`grid ${
+							!isLoading && "bg-white"
+						} grid-rows-9 grid-cols-9 gap-0 p-0 apsect-square`}
 						ref={outerDivRef}>
 						<ModeContext.Provider value={props.currentMode}>
 							{puzzleGrid.flatMap((row) =>
@@ -104,7 +107,8 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 						<button
 							className={`mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
 							onClick={() => handlePuzzleChange()}>
-							next puzzle
+							<PiArrowCircleRightBold />
+							Next Puzzle
 						</button>
 					</div>
 				</>

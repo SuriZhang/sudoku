@@ -147,7 +147,7 @@ export const Cell = (props: CellProps) => {
 				<div
 					tabIndex={0}
 					className={`h-full w-full flex items-center justify-center font-bold aspect-square
-				        border border-1 border-black p-0 text-2xl select-none min-h-32 min-w-32
+				        border border-1 border-grey-500 p-0 text-2xl select-none min-h-32 min-w-32
 				        row-start-${props.x + 1} col-start-${props.y + 1}
 						caret-transparent ${textColor}
 				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
@@ -164,7 +164,7 @@ export const Cell = (props: CellProps) => {
 			return (
 				<div
 					className={`h-full w-full flex items-center justify-center font-bold aspect-square
-				        border border-1 border-black p-0 text-2xl select-none min-h-32 min-w-32
+				        border border-1 border-grey-500 p-0 text-2xl select-none min-h-32 min-w-32
 				        row-start-${props.x + 1} col-start-${props.y + 1}
 						caret-transparent ${textColor}
 				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
