@@ -1,9 +1,11 @@
 # Feature Lists:
 Besides standard functions of a Sudoku game, this project has the following noticeable features.
-1. Two game modes are implemented: `INSERT` and `MARK`.  
+1. Two game modes are implemented: `INSERT` and `MARK`. Legal input contains only digits 1-9, and backspace keydown event. If a digit is entered twice, it is considered as removal. Backspace always removes the value in the current cell or the most recently entered mark value.  
 `INSERT` mode means user is filling a cell with their answer. The answer will be validated on backend logic, if conflicted with existing cells, those will be highlighted.  
 `MARK` mode indicates users are not inputting their final answer, digits are 1-9 are allowed and will be displayed in a fixed position insde cell (i.e, digit 1 is always at the top-left corner anad digit-9 is always at the bottom right corner). This allows users to quickly identify the marks based on their positions.
-The marks entered preserves the order of insertion so that user presses backspace always remove the most recent one which is in line with user habits.
+The marks entered preserves the order of insertion so that user presses backspace always remove the most recent one which is in line with user habits.  
+The display logic of cell is as follows: cell value(considered as user's answer or prefilled values in puzzle) has the highest priority, when a cell has a value, it is always displayed regardless of mode. If a cell has marks, it can only be edited in `MARK` mode, but it will be displayed in `INSERT` mode.  
+
 1. Single select and multi-select.  
 The displayed puzzle grid allows user to select a cell on mouse click. If user holds Shift key, and click multiple cells all clicked cells are selected.
 
