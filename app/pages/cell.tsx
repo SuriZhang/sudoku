@@ -80,14 +80,9 @@ export const Cell = (props: CellProps) => {
 			}
 		}
 		setMarkValues(newMarkValues);
-		console.log(`markValues = ${markValues}`);
 	};
 
 	const handleOnValueKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.shiftKey) {
-			console.log("handleOnValueKeyDown: Shift key is pressed");
-			return;
-		}
 		if (e.key === "Backspace") {
 			props.onValueChange(props.x, props.y, 0);
 		} else if (e.key.match(/[1-9]/) && currentMode === "INSERT") {
@@ -96,12 +91,7 @@ export const Cell = (props: CellProps) => {
 		}
 	};
 
-	const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
-		let isMultiSelect = false;
-		if (e.shiftKey) {
-			console.log("Shift key is pressed");
-			isMultiSelect = true;
-		}
+	const handleOnClick = () => {
 		props.onClick(props.x, props.y, isMultiSelect);
 	};
 

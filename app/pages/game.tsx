@@ -11,7 +11,6 @@ export default function Game() {
 	const handleModeChange = (mode: string) => {
 		if (mode === "INSERT" || mode === "MARK") {
 			setCurrentMode(mode);
-			console.log(`currentMode = ${currentMode}`);
 		}
 	};
 

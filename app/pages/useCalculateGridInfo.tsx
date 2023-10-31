@@ -18,7 +18,6 @@ export const useCalculateGridInfo = () => {
 
 	// capture selected cells change
 	useEffect(() => {
-		// This callback will run whenever selectedCells changes.
 		console.log(
 			"Selected Cells have changed:",
 			JSON.stringify(selectedCells)
@@ -145,7 +144,6 @@ export const useCalculateGridInfo = () => {
 	};
 
 	const onCellClick = (x: number, y: number, isMultiSelect: boolean) => {
-		console.log(`isMultiSelect = ${isMultiSelect}`);
 		// if not multi-select, clear existing selects
 		if (!isMultiSelect) {
 			clearSelectedCells(puzzleGrid);
@@ -166,15 +164,9 @@ export const useCalculateGridInfo = () => {
 			return row;
 		});
 		setPuzzleGrid(updatedGrid);
-		console.log(`selectedCells = ${JSON.stringify(selectedCells)}`);
 	};
 
 	const init = (puzzle: string) => {
-		console.log(`init.puzzle = ${puzzle}`);
-		if (puzzle === "") {
-			console.log("puzzle is empty");
-		}
-
 		let gridInfo: GridInfo[][] = [];
 		if (puzzle !== "" && puzzle !== undefined) {
 			for (let r: number = 0; r < 9; r++) {
