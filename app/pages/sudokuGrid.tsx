@@ -5,7 +5,7 @@ import { Cell } from "./cell";
 import { GridInfo, useCalculateGridInfo } from "./useCalculateGridInfo";
 import { ModeContext } from "../utils/modeContext";
 import { getPuzzles } from "../utils/puzzleLoader";
-import { Loading } from "./loading";
+import { Loading } from "./loadingAnimation";
 
 export const SudokuGrid = (props: { currentMode: string }) => {
 	const {
@@ -77,36 +77,38 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 
 	return (
 		<>
-			<div
-				className="grid bg-gray-100 grid-rows-9 grid-cols-9 gap-0 p-0"
-				ref={outerDivRef}>
-				<ModeContext.Provider value={props.currentMode}>
-					{isLoading ? (
-						<Loading />
-					) : (
-						puzzleGrid.flatMap((row) =>
-							row.map((cell) => {
-								return (
-									<Cell
-										key={`${cell.x}*9+${cell.y}`}
-										{...cell}
-										onValueChange={onCellValueChange}
-										onClick={onCellClick}
-									/>
-								);
-							})
-						)
-					)}
-				</ModeContext.Provider>
-			</div>
-			<div className="p-5">
-				<button
-					className={`mr-2 bg-blue-500
-					hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
-					onClick={() => handlePuzzleChange()}>
-					next puzzle
-				</button>
-			</div>
+			{isLoading ? (
+				<Loading />
+			) : (
+				<>
+					<div
+						className={`grid ${ !isLoading && "bg-white"} grid-rows-9 grid-cols-9 gap-0 p-0 apsect-square`}
+						ref={outerDivRef}>
+						<ModeContext.Provider value={props.currentMode}>
+							{puzzleGrid.flatMap((row) =>
+								row.map((cell) => {
+									return (
+										<Cell
+											key={`${cell.x}*9+${cell.y}`}
+											{...cell}
+											onValueChange={onCellValueChange}
+											onClick={onCellClick}
+										/>
+									);
+								})
+							)}
+						</ModeContext.Provider>
+					</div>
+
+					<div className="p-5">
+						<button
+							className={`mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
+							onClick={() => handlePuzzleChange()}>
+							next puzzle
+						</button>
+					</div>
+				</>
+			)}
 		</>
 	);
 };

@@ -132,14 +132,6 @@ export const useCalculateGridInfo = () => {
 	};
 
 	const clearSelectedCells = (grid: GridInfo[][]) => {
-		console.log("clearSelectedCells");
-		// remove all selected cells
-
-		console.log(
-			`clearSelectedCells.selectedCells = ${JSON.stringify(
-				selectedCells
-			)}`
-		);
 		// clear all selected cells
 		let updatedGrid = grid.map((row) => {
 			row.map((cell) => {
