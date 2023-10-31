@@ -9,9 +9,25 @@ The display logic of cell is as follows: cell value(considered as user's answer 
 1. Single select and multi-select.  
 The displayed puzzle grid allows user to select a cell on mouse click. If user holds Shift key, and click multiple cells all clicked cells are selected.
 
+# Project Design Breakdown:  
+Some important components are explained in this section to help under the project structure.
+- pages:
+  - game: a parent component that holds all components related to the game. Game mode is set here.
+  - useCalculateGridInfo: a custom hook which contains information that should be shared between a cell and the sudokuGrid. Cell value validation logic is implemented here.
+  - cell: contains props that are specific to the cell itself (marks), which do not share with other cells on the grid.
+  - sudokuGrid: used to load puzzles from database and render the 9x9 grid of cells, is responsible for changing puzzles for the user.
+- utils:  
+  - random: generates random stuff, used to test rendering and logic before hooked up with supabse.  
+  - supabase: used to configure connection to supabase database.  
+  - puzzleLoader: used to load data from `sudoku_puzzles` table.  
+  - modeContext: set up Context of game mode.
+
+  
+
 # Possible Extensions:
 Below are some features could be implemented to improve the project but not realized due to limited time.
 1. Multi-fill: Since we have implemented multi-select function, we could extend it when a user presses a digit key, fill all selected cells with the numebr (behavior should correspond to the current insert or mark mode).
+1. Some UI on instructions: It would be good to include some instructions on user operations in the UI.
 1. Game Difficulty Levels: In the provided puzzles from supabase, there are ones with fewer digits pre-filled, we could implement logic to define a puzzle's difficulty based on number of prefilled cells and allow users to choose.
 1. Stored Progress: Currently the game progress is not stored, we could store the answers or even the filled numbers to database and allow users to resume their progress. To implement this, we could create two more tables: `users` and `user_progress`. The `progress` column in `user_progress` table should store the puzzle with (partially) filled numbers from user. When a user attempts to play a puzzle, we query the `user_progress` table to first determine if there is an entry, if yes, load and allow user to resume from last time, if no then load from `sudoku_puzzles` for a fresh game.  
 If there is only one user, then the `user` table can be omitted.
@@ -41,4 +57,4 @@ If there is only one user, then the `user` table can be omitted.
 When a user attempts to show answer of the current puzzle, we render the full answers in the `SudokuGrid` component, highlight cells that are incorrect.  
 1. Show Hint: Given we already have the answer of the full puzzle, it is easy to implment show hint feature, it should behave as follows: when a user selects a cell, show hint should provide the correct answer of it. To further extend this, if in hard level, we could even show up to 3 numbers by hint to help the user reduce the options.
 1. ToolBox: Currently all user inputs are captured by keyboard input, we could add a toolbox component (like a numpad with 1-9) to also take input digits from toolbox.
-1. Shortcut on Mode change: Currently the game mode of `INSERT` and `MARK` are switched by button clicks, we could add eventlisteners to capture user behaviors (e.g., when a user rightclicks on a cell, it automatically swithes to `MARK` mode for the cell).
+1. Shortcut on Mode change: Currently the game mode of `INSERT` and `MARK` are switched by button clicks, we could add eventlisteners to capture user behaviors (e.g., when a user rightclicks on a cell, it automatically switches to `MARK` mode for the cell).
