@@ -90,7 +90,7 @@ export const Cell = (props: CellProps) => {
 		}
 		if (e.key === "Backspace") {
 			props.onValueChange(props.x, props.y, 0);
-		} else if (e.key.match(/[1-9]/)) {
+		} else if (e.key.match(/[1-9]/) && currentMode === "INSERT") {
 			let inputValue: number = parseInt(e.key.slice(0, 1));
 			props.onValueChange(props.x, props.y, inputValue);
 		}
@@ -138,7 +138,7 @@ export const Cell = (props: CellProps) => {
 		if (props.isConflict) {
 			textColor = "text-red-500";
 		} else if (!props.isEditable) {
-			textColor = "text-gray-500";
+			textColor = "text-blue-900";
 		}
 
 		if (props.isEditable) {
