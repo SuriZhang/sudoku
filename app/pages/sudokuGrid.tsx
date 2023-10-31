@@ -103,7 +103,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 						</ModeContext.Provider>
 					</div>
 
-					<div className="p-5">
+					<div className="mt-5">
 						<button
 							className={`mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded`}
 							onClick={() => handlePuzzleChange()}>

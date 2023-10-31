@@ -105,18 +105,35 @@ export const Cell = (props: CellProps) => {
 		props.onClick(props.x, props.y, isMultiSelect);
 	};
 
+	const borderStyle: string = `border
+		${
+			(props.x + 1) % 3 === 0 &&
+			props.x !== 8 &&
+			!props.isSelected &&
+			"border-b-2 border-gray-700"
+		}
+		${
+			(props.y + 1) % 3 === 0 &&
+			props.y !== 8 &&
+			!props.isSelected &&
+			"border-r-2 border-gray-700"
+		}
+		${
+			props.isSelected
+				? "border-2 border-blue-700 bg-blue-100"
+				: "border-1 border-gray-700"
+		}
+		${props.isConflict && "bg-red-200"}`;
+
 	const renderMarks = (allowEdit: boolean) => {
 		return (
 			<div
 				tabIndex={allowEdit ? 0 : -1}
 				className={`flex h-full w-full justify-center aspect-square 
-                    border p-0 text-sm text-center
-					${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
-                    row-start-${props.x + 1} col-start-${props.y + 1}
-                    ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2"}
-                    ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2"}
-                    ${props.isConflict ? "text-red-500 bg-red-200" : "text-black" }
-                    `}
+                    p-0 text-sm lg:text-md text-center
+                    row-start-${props.x + 1} col-start-${
+						props.y + 1
+					} ${borderStyle}`}
 				onKeyDown={handleOnMarkKeyDown}
 				onClick={handleOnClick}>
 				<div className="grid grid-cols-3 grid-rows-3 gap-0 p-0 w-full h-full">
@@ -146,15 +163,10 @@ export const Cell = (props: CellProps) => {
 			return (
 				<div
 					tabIndex={0}
-					className={`h-full w-full flex items-center justify-center font-bold aspect-square
-				        border border-1 border-grey-500 p-0 text-2xl select-none min-h-32 min-w-32
+					className={`h-full w-full flex items-center justify-center aspect-square
+				        p-0 text-2xl lg:text-5xl select-none min-h-32 min-w-32
 				        row-start-${props.x + 1} col-start-${props.y + 1}
-						caret-transparent ${textColor}
-				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
-				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
-						${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
-				        ${props.isConflict && "bg-red-200"}
-				    `}
+						caret-transparent ${textColor} ${borderStyle}`}
 					onKeyDown={handleOnValueKeyDown}
 					onClick={handleOnClick}>
 					{props.value === 0 ? "" : props.value}
@@ -163,15 +175,10 @@ export const Cell = (props: CellProps) => {
 		} else {
 			return (
 				<div
-					className={`h-full w-full flex items-center justify-center font-bold aspect-square
-				        border border-1 border-grey-500 p-0 text-2xl select-none min-h-32 min-w-32
+					className={`h-full w-full flex items-center justify-center aspect-square
+				        p-0 text-2xl lg:text-5xl select-none min-h-32 min-w-32
 				        row-start-${props.x + 1} col-start-${props.y + 1}
-						caret-transparent ${textColor}
-				        ${(props.x + 1) % 3 === 0 && props.x !== 8 && "border-b-2 border-black"}
-				        ${(props.y + 1) % 3 === 0 && props.y !== 8 && "border-r-2 border-black"}
-						${props.isSelected ? "border-2 border-blue-700" : "border-1 border-black"}
-				        ${props.isConflict && "bg-red-200"}
-				    `}
+						caret-transparent ${textColor} ${borderStyle}`}
 					onKeyDown={handleOnValueKeyDown}
 					onClick={handleOnClick}>
 					{props.value === 0 ? "" : props.value}
