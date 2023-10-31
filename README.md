@@ -1,14 +1,19 @@
 # Feature Highlights:
 Besides standard functions of a Sudoku game, this project has the following noticeable features.
 1. Two game modes are implemented: `INSERT` and `MARK`.   
-Legal input contains only digits 1-9. If a digit is entered twice, it is considered as removal. Pressing backspace always removes the value in the current cell or the most recently entered mark value of the cell.   
-`INSERT` mode means user is filling a cell with their answer. The answer will be validated on backend logic, if is conflicted with existing cells, those will be highlighted.  
+Legal input contains only digits 1-9. If a digit is entered twice, it is considered as removal. Pressing backspace always removes the value in the current cell or the most recently entered mark value of the cell.
+   
+`INSERT` mode means user is filling a cell with their answer. The large font in `INSERT` mode is intentioned to make them more visible and clear. The user answer will be validated on backend logic, if is conflicted with existing cells, those will be highlighted. 
+
 `MARK` mode indicates users are not inputting their final answer but taking notes of potential values for the cell, marks of digits 1-9 will be displayed in a fixed position insde cell (i.e, digit 1 is always at the top-left corner anad digit-9 is always at the bottom right corner). This allows users to quickly identify the marks based on their positions.
+
 The marks entered preserves the order of insertion so that user presses backspace always removes the most recent one which is in line with user habits.  
+
 The display logic of cell is as follows: cell value (considered as user's answer or prefilled values in puzzle) has the highest priority, when a cell has a value, it is always displayed regardless of mode. If a cell has marks, it can only be edited in `MARK` mode, but it will be displayed in `INSERT` mode if the cell is currently empty. When a user inserts to a cell with marks in `INSERT` mode, the entered value overlays the marks, but if the value is removed, marks will be displayed again.
 
 1. Single select and multi-select.  
 The displayed puzzle grid allows user to select a cell on mouse click. If user holds Shift key, and click multiple cells, all clicked cells are selected.
+
 Current multi-select allows the user to select any cells regardless if they are connected with each other or separated far away. In multi-select mode, click on the selected cells again to de-select it or click anywhere outside the grid to clear all selections.
 
 # Project Design Breakdown:  
