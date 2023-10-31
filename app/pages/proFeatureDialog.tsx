@@ -15,8 +15,8 @@ export const ProFeatureDialog = ({
 	return (
 		<div className="fixed inset-0 flex items-center justify-center z-50">
 			<div className="bg-yellow-50 bg-opacity-80 rounded-lg p-8 shadow-lg border border-gray-200">
-				<h2 className="text-xl font-bold mb-4 font-mono text-gray-700">
-					This is a Pro Feature <AiFillSmile />
+				<h2 className="text-xl font-bold mb-4 font-mono text-gray-00">
+					Woo you found a Pro Feature! <AiFillSmile />
 				</h2>
 				<p className="mb-4">
 					<img
