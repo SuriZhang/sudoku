@@ -84,7 +84,7 @@ export const SudokuGrid = (props: { currentMode: string }) => {
 				<>
 					<div
 						className={`grid ${
-							!isLoading && "bg-white"
+							!isLoading && "bg-blue-50"
 						} grid-rows-9 grid-cols-9 gap-0 p-0 apsect-square`}
 						ref={outerDivRef}>
 						<ModeContext.Provider value={props.currentMode}>
